@@ -10,19 +10,19 @@ import {
   Spinner,
   Pagination,
 } from "@nextui-org/react";
-import {MoonFilledIcon, SunFilledIcon} from "@nextui-org/shared-icons";
-import {useTheme} from "next-themes";
+import { MoonFilledIcon, SunFilledIcon } from "@nextui-org/shared-icons";
+import { useTheme } from "next-themes";
 import NextImage from "next/image";
 
-import {FloatingTabs} from "./floating-tabs";
+import { FloatingTabs } from "./floating-tabs";
 
-import {UserTwitterCard} from "@/components/demos/user-twitter-card";
-import {useIsMounted} from "@/hooks/use-is-mounted";
-import {useMediaQuery} from "@/hooks/use-media-query";
-import {NextUILogo} from "@/components/nextui-logo";
+import { UserTwitterCard } from "@/components/demos/user-twitter-card";
+import { useIsMounted } from "@/hooks/use-is-mounted";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { NextUILogo } from "@/components/nextui-logo";
 
 export const FloatingComponents: React.FC<{}> = () => {
-  const {theme, setTheme} = useTheme();
+  const { theme, setTheme } = useTheme();
 
   const isMounted = useIsMounted();
   const isSelected = theme === "dark" && isMounted;

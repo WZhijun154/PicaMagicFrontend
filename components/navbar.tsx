@@ -29,6 +29,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 import { usePress } from "@react-aria/interactions";
 import { useFocusRing } from "@react-aria/focus";
+import { useCurrentThemeColor } from "@/hooks/use-current-theme-color";
 
 import { siteConfig } from "@/config/site";
 import { Route } from "@/libs/docs/page";
@@ -128,10 +129,17 @@ export const Navbar: FC<NavbarProps> = ({
     return null;
   }
 
-  const navLinkClasses = clsx(
-    link({ color: "foreground" }),
-    "data-[active=true]:text-primary"
-  );
+  // const navLinkClasses = clsx(
+  //   link({ color: "foreground" }),
+  //   "data-[active=true]:text-secondary"
+  // );
+
+  const navLinkClasses = (color: string) => {
+    return clsx(
+      link({ color: "foreground" }),
+      `data-[active=true]:text-${color}`
+    );
+  };
 
   // const handleVersionChange = (key: Key) => {
   //   if (key === "v1") {
@@ -164,18 +172,22 @@ export const Navbar: FC<NavbarProps> = ({
       maxWidth="xl"
       position="sticky"
       onMenuOpenChange={setIsMenuOpen}
-      classNames={{
-        item: [
-          // "data-[active=true]:after:content-['']",
-          // "data-[active=true]:after:absolute",
-          // "data-[active=true]:after:bottom-0",
-          // "data-[active=true]:after:left-0",
-          // "data-[active=true]:after:right-0",
-          // "data-[active=true]:after:h-[2px]",
-          // "data-[active=true]:after:rounded-[2px]",
-          "data-[active=true]:after:bg-secondary",
-        ],
-      }}
+      // classNames={{
+      //   item: [
+      //     "flex",
+      //     "relative",
+      //     "h-full",
+      //     "items-center",
+      //     "data-[active=true]:after:content-['']",
+      //     "data-[active=true]:after:absolute",
+      //     "data-[active=true]:after:bottom-0",
+      //     "data-[active=true]:after:left-0",
+      //     "data-[active=true]:after:right-0",
+      //     "data-[active=true]:after:h-[2px]",
+      //     "data-[active=true]:after:rounded-[2px]",
+      //     "data-[active=true]:after:bg-primary",
+      //   ],
+      // }}
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
@@ -205,39 +217,66 @@ export const Navbar: FC<NavbarProps> = ({
           </NavbarItem> */}
           <NavbarItem>
             <NextLink
-              className={navLinkClasses}
-              // color="foreground"
-              data-active={includes(docsPaths, pathname)}
-              href="/docs/guide/introduction"
-              onClick={() =>
-                handlePressNavbarItem("Docs", "/docs/guide/introduction")
-              }
+              className={"data-[active=true]:text-" + useCurrentThemeColor({})}
+              color="foreground"
+              href="/upscaler"
+              data-active={pathname === "/upscaler"}
+              onClick={() => handlePressNavbarItem("upscaler", "/upscaler")}
             >
               Super Resolution
             </NextLink>
           </NavbarItem>
           <NavbarItem>
             <NextLink
-              className={navLinkClasses}
-              // color="foreground"
-              data-active={includes(pathname, "components")}
-              href="/docs/components/avatar"
-              onClick={() =>
-                handlePressNavbarItem("Components", "/docs/components/avatar")
+              className={
+                "data-[active=true]:text-" +
+                useCurrentThemeColor({ intensity: 600 })
               }
+              color="foreground"
+              data-active={pathname === "/bg-remover"}
+              href="/bg-remover"
+              onClick={() => handlePressNavbarItem("bg-remover", "/bg-remover")}
             >
-              Components
+              Remove Backgrounds
             </NextLink>
           </NavbarItem>
           <NavbarItem>
             <NextLink
-              className={navLinkClasses}
-              // color="foreground"
-              data-active={includes(pathname, "blog")}
-              href="/blog"
-              onClick={() => handlePressNavbarItem("Blog", "/blog")}
+              className={
+                "data-[active=true]:text-" +
+                useCurrentThemeColor({ intensity: 600 })
+              }
+              color="foreground"
+              data-active={pathname === "/colorizer"}
+              href="/colorizer"
+              onClick={() => handlePressNavbarItem("colorizer", "/colorizer")}
             >
-              Blog
+              Colorize
+            </NextLink>
+          </NavbarItem>
+          <NavbarItem>
+            <NextLink
+              className={
+                "data-[active=true]:text-" +
+                useCurrentThemeColor({ intensity: 500 })
+              }
+              color="foreground"
+              data-active={pathname === "/denoiser"}
+              href="/denoiser"
+              onClick={() => handlePressNavbarItem("denoiser", "/denoiser")}
+            >
+              Denosie
+            </NextLink>
+          </NavbarItem>
+          <NavbarItem>
+            <NextLink
+              className={"data-[active=true]:text-" + useCurrentThemeColor({})}
+              color="foreground"
+              data-active={includes(pathname, "deblurer")}
+              href="/deblurer"
+              onClick={() => handlePressNavbarItem("deblurer", "/deblurer")}
+            >
+              Deblur
             </NextLink>
           </NavbarItem>
           {/* <NavbarItem>
@@ -403,12 +442,20 @@ export const Navbar: FC<NavbarProps> = ({
         </NavbarItem> */}
         <ul className="hidden lg:flex gap-4 justify-start items-center">
           <NavbarItem>
-            <Button radius="full" variant="light" color="secondary">
+            <Button
+              radius="full"
+              variant="light"
+              color={useCurrentThemeColor({}) as any}
+            >
               Login
             </Button>
           </NavbarItem>
           <NavbarItem>
-            <Button radius="full" variant="flat" color="secondary">
+            <Button
+              radius="full"
+              variant="flat"
+              color={useCurrentThemeColor({}) as any}
+            >
               Sign Up
             </Button>
           </NavbarItem>

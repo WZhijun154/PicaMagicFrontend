@@ -131,7 +131,7 @@ export const Hero = () => {
         </div> */}
       </div>
 
-      <FloatingComponents />
+      {/* <FloatingComponents /> */}
 
       <BgLooper />
     </section>
