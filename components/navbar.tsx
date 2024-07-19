@@ -42,8 +42,10 @@ import {
 import { useIsMounted } from "@/hooks/use-is-mounted";
 import { DocsSidebar } from "@/components/docs/sidebar";
 import { useCmdkStore } from "@/components/cmdk";
-import { FbRoadmapLink } from "@/components/featurebase/fb-roadmap-link";
+// import { FbRoadmapLink } from "@/components/featurebase/fb-roadmap-link";
 import { trackEvent } from "@/utils/va";
+import { FbFeedbackButton } from "./featurebase/fb-feedback-button";
+// import { FbChangelogButton } from "./featurebase/fb-changelog-button";
 
 export interface NavbarProps {
   routes: Route[];
@@ -100,27 +102,27 @@ export const Navbar: FC<NavbarProps> = ({
     "/docs/guide/upgrade-to-v2",
   ];
 
-  const searchButton = (
-    <Button
-      aria-label="Quick search"
-      className="text-sm font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20"
-      endContent={
-        <Kbd className="hidden py-0.5 px-2 lg:inline-block" keys={commandKey}>
-          K
-        </Kbd>
-      }
-      startContent={
-        <SearchLinearIcon
-          className="text-base text-default-400 pointer-events-none flex-shrink-0"
-          size={18}
-          strokeWidth={2}
-        />
-      }
-      onPress={handleOpenCmdk}
-    >
-      Quick Search...
-    </Button>
-  );
+  // const searchButton = (
+  //   <Button
+  //     aria-label="Quick search"
+  //     className="text-sm font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20"
+  //     endContent={
+  //       <Kbd className="hidden py-0.5 px-2 lg:inline-block" keys={commandKey}>
+  //         K
+  //       </Kbd>
+  //     }
+  //     startContent={
+  //       <SearchLinearIcon
+  //         className="text-base text-default-400 pointer-events-none flex-shrink-0"
+  //         size={18}
+  //         strokeWidth={2}
+  //       />
+  //     }
+  //     onPress={handleOpenCmdk}
+  //   >
+  //     Quick Search...
+  //   </Button>
+  // );
 
   if (pathname.includes("/examples")) {
     return null;
@@ -131,17 +133,17 @@ export const Navbar: FC<NavbarProps> = ({
     "data-[active=true]:text-primary"
   );
 
-  const handleVersionChange = (key: Key) => {
-    if (key === "v1") {
-      const newWindow = window.open(
-        "https://v1.nextui.org",
-        "_blank",
-        "noopener,noreferrer"
-      );
+  // const handleVersionChange = (key: Key) => {
+  //   if (key === "v1") {
+  //     const newWindow = window.open(
+  //       "https://v1.nextui.org",
+  //       "_blank",
+  //       "noopener,noreferrer"
+  //     );
 
-      if (newWindow) newWindow.opener = null;
-    }
-  };
+  //     if (newWindow) newWindow.opener = null;
+  //   }
+  // };
 
   const handlePressNavbarItem = (name: string, url: string) => {
     trackEvent("NavbarItem", {
@@ -162,6 +164,18 @@ export const Navbar: FC<NavbarProps> = ({
       maxWidth="xl"
       position="sticky"
       onMenuOpenChange={setIsMenuOpen}
+      classNames={{
+        item: [
+          // "data-[active=true]:after:content-['']",
+          // "data-[active=true]:after:absolute",
+          // "data-[active=true]:after:bottom-0",
+          // "data-[active=true]:after:left-0",
+          // "data-[active=true]:after:right-0",
+          // "data-[active=true]:after:h-[2px]",
+          // "data-[active=true]:after:rounded-[2px]",
+          "data-[active=true]:after:bg-secondary",
+        ],
+      }}
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
@@ -176,7 +190,7 @@ export const Navbar: FC<NavbarProps> = ({
           </NextLink>
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-start items-center">
-          <NavbarItem>
+          {/* <NavbarItem>
             <NextLink
               className={navLinkClasses}
               color="foreground"
@@ -188,11 +202,24 @@ export const Navbar: FC<NavbarProps> = ({
             >
               Docs
             </NextLink>
+          </NavbarItem> */}
+          <NavbarItem>
+            <NextLink
+              className={navLinkClasses}
+              // color="foreground"
+              data-active={includes(docsPaths, pathname)}
+              href="/docs/guide/introduction"
+              onClick={() =>
+                handlePressNavbarItem("Docs", "/docs/guide/introduction")
+              }
+            >
+              Super Resolution
+            </NextLink>
           </NavbarItem>
           <NavbarItem>
             <NextLink
               className={navLinkClasses}
-              color="foreground"
+              // color="foreground"
               data-active={includes(pathname, "components")}
               href="/docs/components/avatar"
               onClick={() =>
@@ -205,7 +232,7 @@ export const Navbar: FC<NavbarProps> = ({
           <NavbarItem>
             <NextLink
               className={navLinkClasses}
-              color="foreground"
+              // color="foreground"
               data-active={includes(pathname, "blog")}
               href="/blog"
               onClick={() => handlePressNavbarItem("Blog", "/blog")}
@@ -213,7 +240,7 @@ export const Navbar: FC<NavbarProps> = ({
               Blog
             </NextLink>
           </NavbarItem>
-          <NavbarItem>
+          {/* <NavbarItem>
             <NextLink
               className={navLinkClasses}
               color="foreground"
@@ -223,21 +250,21 @@ export const Navbar: FC<NavbarProps> = ({
             >
               Figma
             </NextLink>
-          </NavbarItem>
+          </NavbarItem> */}
           {/* hide feedback and changelog at this moment */}
           {/* <NavbarItem>
             <NextLink className={navLinkClasses} color="foreground" href="#">
               <FbChangelogButton key="changelog" userName="" />
             </NextLink>
-          </NavbarItem>
-          <NavbarItem>
+          </NavbarItem> */}
+          {/* <NavbarItem>
             <NextLink className={navLinkClasses} color="foreground" href="#">
-              <FbFeedbackButton key="feedback" userEmail="" />
+              <FbFeedbackButton key="feedback" />
             </NextLink>
           </NavbarItem> */}
-          <NavbarItem>
+          {/* <NavbarItem>
             <FbRoadmapLink className={navLinkClasses} />
-          </NavbarItem>
+          </NavbarItem> */}
           {/* <NavbarItem>
             <Chip
               as={NextLink}
@@ -305,7 +332,7 @@ export const Navbar: FC<NavbarProps> = ({
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
-        <NavbarItem className="hidden sm:flex">
+        {/* <NavbarItem className="hidden sm:flex">
           <Chip
             as={NextLink}
             className="bg-default-100/50 hover:bg-default-100 border-default-200/80 dark:border-default-100/80 transition-colors cursor-pointer"
@@ -321,9 +348,9 @@ export const Navbar: FC<NavbarProps> = ({
               🚀
             </span>
           </Chip>
-        </NavbarItem>
+        </NavbarItem> */}
         <NavbarItem className="hidden sm:flex">
-          <Link
+          {/* <Link
             isExternal
             aria-label="Twitter"
             className="p-1"
@@ -333,8 +360,8 @@ export const Navbar: FC<NavbarProps> = ({
             }
           >
             <TwitterIcon className="text-default-600 dark:text-default-500" />
-          </Link>
-          <Link
+          </Link> */}
+          {/* <Link
             isExternal
             aria-label="Discord"
             className="p-1"
@@ -344,8 +371,8 @@ export const Navbar: FC<NavbarProps> = ({
             }
           >
             <DiscordIcon className="text-default-600 dark:text-default-500" />
-          </Link>
-          <Link
+          </Link> */}
+          {/* <Link
             isExternal
             aria-label="Github"
             className="p-1"
@@ -355,10 +382,10 @@ export const Navbar: FC<NavbarProps> = ({
             }
           >
             <GithubIcon className="text-default-600 dark:text-default-500" />
-          </Link>
-          <ThemeSwitch />
+          </Link> */}
+          {/* <ThemeSwitch /> */}
         </NavbarItem>
-        <NavbarItem className="hidden lg:flex">{searchButton}</NavbarItem>
+        {/* <NavbarItem className="hidden lg:flex">{searchButton}</NavbarItem> */}
         {/* <NavbarItem className="hidden md:flex">
           <Button
             isExternal
@@ -374,6 +401,18 @@ export const Navbar: FC<NavbarProps> = ({
             Sponsor
           </Button>
         </NavbarItem> */}
+        <ul className="hidden lg:flex gap-4 justify-start items-center">
+          <NavbarItem>
+            <Button radius="full" variant="light" color="secondary">
+              Login
+            </Button>
+          </NavbarItem>
+          <NavbarItem>
+            <Button radius="full" variant="flat" color="secondary">
+              Sign Up
+            </Button>
+          </NavbarItem>
+        </ul>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="hidden sm:flex lg:hidden ml-4"

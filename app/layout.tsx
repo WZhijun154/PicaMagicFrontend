@@ -88,7 +88,7 @@ export default function RootLayout({
             {children}
             <Footer />
           </div>
-          <Cmdk />
+          {/* <Cmdk /> */}
         </Providers>
       </body>
     </html>
