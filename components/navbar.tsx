@@ -97,11 +97,15 @@ export const Navbar: FC<NavbarProps> = ({
   });
   const { focusProps, isFocusVisible } = useFocusRing();
 
-  const docsPaths = [
-    "/docs/guide/introduction",
-    "/docs/guide/installation",
-    "/docs/guide/upgrade-to-v2",
-  ];
+  const currentThemeColor = useCurrentThemeColor({});
+  console.log("currentThemeColor: ", currentThemeColor);
+  // use currentThemeColor
+  const nextLinkColor = "data-[active=true]:text-" + currentThemeColor;
+  // const docsPaths = [
+  //   "/docs/guide/introduction",
+  //   "/docs/guide/installation",
+  //   "/docs/guide/upgrade-to-v2",
+  // ];
 
   // const searchButton = (
   //   <Button
@@ -217,7 +221,7 @@ export const Navbar: FC<NavbarProps> = ({
           </NavbarItem> */}
           <NavbarItem>
             <NextLink
-              className={"data-[active=true]:text-" + useCurrentThemeColor({})}
+              className={"data-[active=true]:text-primary"}
               color="foreground"
               href="/upscaler"
               data-active={pathname === "/upscaler"}
@@ -228,10 +232,7 @@ export const Navbar: FC<NavbarProps> = ({
           </NavbarItem>
           <NavbarItem>
             <NextLink
-              className={
-                "data-[active=true]:text-" +
-                useCurrentThemeColor({ intensity: 600 })
-              }
+              className={"data-[active=true]:text-success"}
               color="foreground"
               data-active={pathname === "/bg-remover"}
               href="/bg-remover"
@@ -242,10 +243,7 @@ export const Navbar: FC<NavbarProps> = ({
           </NavbarItem>
           <NavbarItem>
             <NextLink
-              className={
-                "data-[active=true]:text-" +
-                useCurrentThemeColor({ intensity: 600 })
-              }
+              className={"data-[active=true]:text-warning"}
               color="foreground"
               data-active={pathname === "/colorizer"}
               href="/colorizer"
@@ -256,10 +254,7 @@ export const Navbar: FC<NavbarProps> = ({
           </NavbarItem>
           <NavbarItem>
             <NextLink
-              className={
-                "data-[active=true]:text-" +
-                useCurrentThemeColor({ intensity: 500 })
-              }
+              className={"data-[active=true]:text-danger"}
               color="foreground"
               data-active={pathname === "/denoiser"}
               href="/denoiser"
@@ -270,7 +265,7 @@ export const Navbar: FC<NavbarProps> = ({
           </NavbarItem>
           <NavbarItem>
             <NextLink
-              className={"data-[active=true]:text-" + useCurrentThemeColor({})}
+              className={"data-[active=true]:text-secondary"}
               color="foreground"
               data-active={includes(pathname, "deblurer")}
               href="/deblurer"
@@ -445,7 +440,7 @@ export const Navbar: FC<NavbarProps> = ({
             <Button
               radius="full"
               variant="light"
-              color={useCurrentThemeColor({}) as any}
+              color={currentThemeColor as any}
             >
               Login
             </Button>
@@ -454,7 +449,7 @@ export const Navbar: FC<NavbarProps> = ({
             <Button
               radius="full"
               variant="flat"
-              color={useCurrentThemeColor({}) as any}
+              color={currentThemeColor as any}
             >
               Sign Up
             </Button>
