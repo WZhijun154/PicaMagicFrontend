@@ -12,6 +12,24 @@ const twColors = require("tailwindcss/colors.js");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  mode: "jit",
+  safelist: [
+    "border-secondary-200",
+    "border-primary-200",
+    "border-success-200",
+    "border-warning-200",
+    "border-danger-200",
+    "shadow-secondary-300",
+    "shadow-primary-300",
+    "shadow-success-300",
+    "shadow-warning-300",
+    "shadow-danger-300",
+    "data-[active=true]:text-secondary",
+    "data-[active=true]:text-primary",
+    "data-[active=true]:text-success",
+    "data-[active=true]:text-warning",
+    "data-[active=true]:text-danger",
+  ],
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -24,6 +42,9 @@ module.exports = {
   darkMode: "class",
   theme: {
     extend: {
+      aspectRatio: {
+        "4/3": "4 / 3",
+      },
       colors: {
         "code-foreground": "rgb(var(--code-foreground) / <alpha-value>)",
         "code-syntax1": "rgb(var(--code-syntax1) / <alpha-value>)",

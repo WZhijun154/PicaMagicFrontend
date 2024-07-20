@@ -64,41 +64,41 @@ export const Navbar: FC<NavbarProps> = ({
   tag,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean | undefined>(false);
-  const [commandKey, setCommandKey] = useState<"ctrl" | "command">("command");
+  // const [commandKey, setCommandKey] = useState<"ctrl" | "command">("command");
 
   const ref = useRef<HTMLElement>(null);
-  const isMounted = useIsMounted();
+  // const isMounted = useIsMounted();
 
   const pathname = usePathname();
 
-  const cmdkStore = useCmdkStore();
+  // const cmdkStore = useCmdkStore();
 
-  useEffect(() => {
-    if (isMenuOpen) {
-      setIsMenuOpen(false);
-    }
-  }, [pathname]);
+  // useEffect(() => {
+  //   if (isMenuOpen) {
+  //     setIsMenuOpen(false);
+  //   }
+  // }, [pathname]);
 
-  useEffect(() => {
-    setCommandKey(isAppleDevice() ? "command" : "ctrl");
-  }, []);
+  // useEffect(() => {
+  //   setCommandKey(isAppleDevice() ? "command" : "ctrl");
+  // }, []);
 
-  const handleOpenCmdk = () => {
-    cmdkStore.onOpen();
-    trackEvent("Navbar - Search", {
-      name: "navbar - search",
-      action: "press",
-      category: "cmdk",
-    });
-  };
+  // const handleOpenCmdk = () => {
+  //   cmdkStore.onOpen();
+  //   trackEvent("Navbar - Search", {
+  //     name: "navbar - search",
+  //     action: "press",
+  //     category: "cmdk",
+  //   });
+  // };
 
-  const { pressProps } = usePress({
-    onPress: handleOpenCmdk,
-  });
+  // const { pressProps } = usePress({
+  //   onPress: handleOpenCmdk,
+  // });
   const { focusProps, isFocusVisible } = useFocusRing();
 
   const currentThemeColor = useCurrentThemeColor({});
-  console.log("currentThemeColor: ", currentThemeColor);
+  // console.log("currentThemeColor: ", currentThemeColor);
   // use currentThemeColor
   const nextLinkColor = "data-[active=true]:text-" + currentThemeColor;
   // const docsPaths = [
@@ -129,21 +129,21 @@ export const Navbar: FC<NavbarProps> = ({
   //   </Button>
   // );
 
-  if (pathname.includes("/examples")) {
-    return null;
-  }
+  // if (pathname.includes("/examples")) {
+  //   return null;
+  // }
 
   // const navLinkClasses = clsx(
   //   link({ color: "foreground" }),
   //   "data-[active=true]:text-secondary"
   // );
 
-  const navLinkClasses = (color: string) => {
-    return clsx(
-      link({ color: "foreground" }),
-      `data-[active=true]:text-${color}`
-    );
-  };
+  // const navLinkClasses = (color: string) => {
+  //   return clsx(
+  //     link({ color: "foreground" }),
+  //     `data-[active=true]:text-${color}`
+  //   );
+  // };
 
   // const handleVersionChange = (key: Key) => {
   //   if (key === "v1") {
@@ -221,7 +221,7 @@ export const Navbar: FC<NavbarProps> = ({
           </NavbarItem> */}
           <NavbarItem>
             <NextLink
-              className={"data-[active=true]:text-primary"}
+              className={nextLinkColor}
               color="foreground"
               href="/upscaler"
               data-active={pathname === "/upscaler"}
@@ -232,7 +232,7 @@ export const Navbar: FC<NavbarProps> = ({
           </NavbarItem>
           <NavbarItem>
             <NextLink
-              className={"data-[active=true]:text-success"}
+              className={nextLinkColor}
               color="foreground"
               data-active={pathname === "/bg-remover"}
               href="/bg-remover"
@@ -243,7 +243,7 @@ export const Navbar: FC<NavbarProps> = ({
           </NavbarItem>
           <NavbarItem>
             <NextLink
-              className={"data-[active=true]:text-warning"}
+              className={nextLinkColor}
               color="foreground"
               data-active={pathname === "/colorizer"}
               href="/colorizer"
@@ -254,7 +254,7 @@ export const Navbar: FC<NavbarProps> = ({
           </NavbarItem>
           <NavbarItem>
             <NextLink
-              className={"data-[active=true]:text-danger"}
+              className={nextLinkColor}
               color="foreground"
               data-active={pathname === "/denoiser"}
               href="/denoiser"
@@ -265,7 +265,7 @@ export const Navbar: FC<NavbarProps> = ({
           </NavbarItem>
           <NavbarItem>
             <NextLink
-              className={"data-[active=true]:text-secondary"}
+              className={nextLinkColor}
               color="foreground"
               data-active={includes(pathname, "deblurer")}
               href="/deblurer"
@@ -317,7 +317,7 @@ export const Navbar: FC<NavbarProps> = ({
         </ul>
       </NavbarContent>
 
-      <NavbarContent className="flex w-full gap-2 sm:hidden" justify="end">
+      {/* <NavbarContent className="flex w-full gap-2 sm:hidden" justify="end">
         <NavbarItem className="flex h-full items-center">
           <Link
             isExternal
@@ -346,7 +346,7 @@ export const Navbar: FC<NavbarProps> = ({
             )}
             data-focus-visible={isFocusVisible}
             {...focusProps}
-            {...pressProps}
+            // {...pressProps}
           >
             <SearchLinearIcon
               className="mt-px text-default-600 dark:text-default-500"
@@ -360,7 +360,7 @@ export const Navbar: FC<NavbarProps> = ({
             className="w-full h-full pt-1"
           />
         </NavbarItem>
-      </NavbarContent>
+      </NavbarContent> */}
 
       <NavbarContent
         className="hidden sm:flex basis-1/5 sm:basis-full"
@@ -383,8 +383,8 @@ export const Navbar: FC<NavbarProps> = ({
             </span>
           </Chip>
         </NavbarItem> */}
-        <NavbarItem className="hidden sm:flex">
-          {/* <Link
+        {/* <NavbarItem className="hidden sm:flex"> */}
+        {/* <Link
             isExternal
             aria-label="Twitter"
             className="p-1"
@@ -395,7 +395,7 @@ export const Navbar: FC<NavbarProps> = ({
           >
             <TwitterIcon className="text-default-600 dark:text-default-500" />
           </Link> */}
-          {/* <Link
+        {/* <Link
             isExternal
             aria-label="Discord"
             className="p-1"
@@ -406,7 +406,7 @@ export const Navbar: FC<NavbarProps> = ({
           >
             <DiscordIcon className="text-default-600 dark:text-default-500" />
           </Link> */}
-          {/* <Link
+        {/* <Link
             isExternal
             aria-label="Github"
             className="p-1"
@@ -417,8 +417,8 @@ export const Navbar: FC<NavbarProps> = ({
           >
             <GithubIcon className="text-default-600 dark:text-default-500" />
           </Link> */}
-          {/* <ThemeSwitch /> */}
-        </NavbarItem>
+        {/* <ThemeSwitch /> */}
+        {/* </NavbarItem> */}
         {/* <NavbarItem className="hidden lg:flex">{searchButton}</NavbarItem> */}
         {/* <NavbarItem className="hidden md:flex">
           <Button
@@ -455,13 +455,13 @@ export const Navbar: FC<NavbarProps> = ({
             </Button>
           </NavbarItem>
         </ul>
-        <NavbarMenuToggle
+        {/* <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="hidden sm:flex lg:hidden ml-4"
-        />
+        /> */}
       </NavbarContent>
 
-      <NavbarMenu>
+      {/* <NavbarMenu>
         <DocsSidebar
           className="mt-4 pt-8"
           routes={[...mobileRoutes, ...routes]}
@@ -469,7 +469,7 @@ export const Navbar: FC<NavbarProps> = ({
           tag={tag}
         />
         {children}
-      </NavbarMenu>
+      </NavbarMenu> */}
     </NextUINavbar>
   );
 };

@@ -95,7 +95,7 @@ export const Intro = ({
   subTitleText,
   isExampleFront = false,
 }: IntroProps) => {
-  const isMobile = useIsMobile();
+  // const isMobile = useIsMobile();
 
   const exampleWidth = size === "lg" ? 768 : 512;
   const sectionWrapperClass = size === "lg" ? "mt-24 lg:mt-56" : "mt-12";

@@ -15,16 +15,14 @@ import VerticalSteps from "../vertical-stepps";
 import { Button } from "@nextui-org/react";
 import { Checkbox } from "@nextui-org/react";
 import { RadioGroup, Radio } from "@nextui-org/react";
+import { useCurrentThemeColor } from "@/hooks/use-current-theme-color";
 
-interface StepperProps {
-  color?: "primary" | "warning" | "success" | "secondary" | "danger";
-}
-
-function Stepper({ color = "primary" }: StepperProps) {
+function Stepper() {
+  const stepperColor = useCurrentThemeColor({});
   return (
     <div className="flex flex-col justify-center items-center">
       <VerticalSteps
-        color={color as any}
+        color={stepperColor as any}
         steps={[
           {
             title: "Upload",
@@ -323,7 +321,7 @@ export default function BasicImageTaskApp({
           >
             <FileDropCard />
           </FileDropArea>
-          <Stepper color={color} />
+          <Stepper />
         </div>
         <div className="flex flex-col justify-center items-center gap-2">
           <ControlPanel color={color} />
