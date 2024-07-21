@@ -16,6 +16,7 @@ import { Button } from "@nextui-org/react";
 import { Checkbox } from "@nextui-org/react";
 import { RadioGroup, Radio } from "@nextui-org/react";
 import { useCurrentThemeColor } from "@/hooks/use-current-theme-color";
+import { Background } from "@/utils/background";
 
 function Stepper() {
   const stepperColor = useCurrentThemeColor({});
@@ -294,13 +295,7 @@ export default function BasicImageTaskApp({
 
   return (
     <>
-      <div
-        aria-hidden="true"
-        className="z-0 fixed w-[120%] h-[120%] -left-[10%] -top-20"
-      >
-        <Image src={color2background[color]} removeWrapper />
-      </div>
-
+      <Background />
       <ImageCompareModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}

@@ -12,6 +12,7 @@ import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ProBanner } from "@/components/pro-banner";
+import { Spacer } from "@nextui-org/spacer";
 
 export const metadata: Metadata = {
   title: {
@@ -86,6 +87,7 @@ export default function RootLayout({
               routes={manifest.routes}
             />
             {children}
+            <Spacer y={24} />
             <Footer />
           </div>
           {/* <Cmdk /> */}

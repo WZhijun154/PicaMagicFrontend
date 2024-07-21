@@ -441,8 +441,11 @@ export const Navbar: FC<NavbarProps> = ({
               radius="full"
               variant="light"
               color={currentThemeColor as any}
+              isDisabled={pathname === "/login"}
             >
-              Login
+              <Link href="login" color={currentThemeColor as any}>
+                Sign in
+              </Link>
             </Button>
           </NavbarItem>
           <NavbarItem>
@@ -450,8 +453,11 @@ export const Navbar: FC<NavbarProps> = ({
               radius="full"
               variant="flat"
               color={currentThemeColor as any}
+              isDisabled={pathname === "/signup"}
             >
-              Sign Up
+              <Link href="signup" color={currentThemeColor as any}>
+                Sign Up
+              </Link>
             </Button>
           </NavbarItem>
         </ul>
