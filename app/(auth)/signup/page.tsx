@@ -11,7 +11,6 @@ import {
   Spacer,
 } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
-import { createClient } from "@/plugins/supabase/client";
 import { useRouter } from "next/navigation";
 import {
   emailPlaceHolder,
@@ -20,8 +19,10 @@ import {
 } from "@/utils/constStr";
 import { Background } from "@/utils/background";
 import { useCurrentThemeColor } from "@/hooks/use-current-theme-color";
+import { signUp } from "@/plugins/supabase/auth";
+import { useTransition } from "react";
 
-export default function SignUp() {
+export default function SignUpPage() {
   const themeColor = useCurrentThemeColor({});
 
   const [isVisible, setIsVisible] = React.useState(false);
@@ -33,30 +34,21 @@ export default function SignUp() {
   const router = useRouter();
 
   //   const { pending, action } = experimental_useFormStatus();
+  const [isPending, setTransition] = useTransition();
 
-  const handleSubmit = async (formData: FormData) => {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const username = formData.get("username") as string;
-    const supabase = createClient();
+  const handleSubmit = (formData: FormData) => {
+    setTransition(async () => {
+      const { data, error } = await signUp(formData);
 
-    const { data, error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-      options: {
-        data: {
-          username: username,
-        },
-      },
+      if (error) {
+        // failed to sign in
+        console.error(error);
+        return;
+      }
+      // redirect to dashboard
+      // console.log("Sign up successful");
+      router.push("/");
     });
-
-    if (error) {
-      // failed to sign in
-      console.error(error);
-    }
-    // redirect to dashboard
-    // console.log("Sign up successful");
-    router.push("/login");
   };
 
   return (

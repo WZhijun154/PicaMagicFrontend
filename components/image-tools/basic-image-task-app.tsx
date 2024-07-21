@@ -173,7 +173,7 @@ export default function BasicImageTaskApp({
     const result = await response.json();
     const output = result.output;
     setProcessedUrl(file, output);
-    console.log(file);
+    // console.log(file);
   }
 
   const onDrop = async (files: File[]) => {

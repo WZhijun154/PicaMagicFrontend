@@ -1,8 +1,8 @@
 "use client";
-import { login, signup } from "./actions";
+
 import { useRouter } from "next/navigation";
 import { emailPlaceHolder, passwordPlaceHolder } from "@/utils/constStr";
-import { createClient } from "@/plugins/supabase/client";
+import { useTransition } from "react";
 import React from "react";
 import {
   Button,
@@ -15,8 +15,9 @@ import {
 import { Icon } from "@iconify/react";
 import { Background } from "@/utils/background";
 import { useCurrentThemeColor } from "@/hooks/use-current-theme-color";
-
-export default function Login() {
+import { signIn } from "@/plugins/supabase/auth";
+import { useUser } from "@/hooks/use-user";
+export default function SignInPage() {
   const themeColor = useCurrentThemeColor({});
   const [isVisible, setIsVisible] = React.useState(false);
 
@@ -24,24 +25,21 @@ export default function Login() {
 
   const router = useRouter();
 
-  const handleSubmit = async (formData: FormData) => {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const supabase = createClient();
+  const { user, setUser } = useUser();
+  const [isPending, setTransition] = useTransition();
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
+  const handleSubmit = (formData: FormData) => {
+    setTransition(async () => {
+      const { data, error } = await signIn(formData);
+      if (error) {
+        console.error(error);
+        return;
+      }
+      // setTransition(() => {
+      //   setUser(data.user);
+      // });
+      router.push("/");
     });
-
-    if (error) {
-      // failed to sign in
-      console.error(error);
-      return;
-    }
-    // redirect to dashboard
-    console.log("Sign in successful");
-    router.push("/");
   };
 
   return (
@@ -49,7 +47,7 @@ export default function Login() {
       <Background />
       <div className="flex flex-row items-center justify-center mt-48">
         <Card className="animate-appearance-in flex w-full max-w-sm flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small">
-          <p className="pb-2 text-xl font-medium">Log In</p>
+          <p className="pb-2 text-xl font-medium">Sign In</p>
           <form className="flex flex-col gap-3">
             <Input
               label="Email Address"
@@ -99,8 +97,9 @@ export default function Login() {
               color={themeColor as any}
               type="submit"
               formAction={handleSubmit}
+              isLoading={isPending}
             >
-              Log In
+              Sign in
             </Button>
           </form>
           {/* <div className="flex items-center gap-4 py-2">

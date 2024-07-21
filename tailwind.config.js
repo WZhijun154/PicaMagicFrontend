@@ -29,6 +29,11 @@ module.exports = {
     "data-[active=true]:text-success",
     "data-[active=true]:text-warning",
     "data-[active=true]:text-danger",
+    "bg-secondary-50/50",
+    "bg-primary-50/50",
+    "bg-success-50/50",
+    "bg-warning-50/50",
+    "bg-danger-50/50",
   ],
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
