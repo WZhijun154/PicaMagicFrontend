@@ -43,6 +43,16 @@ export const signUp = async (formData: FormData) => {
   return {data, error}
 };
 
+export const signOut = async () => {
+  const supabase = await createClient();
+  let {error} = await supabase.auth.signOut();
+  if (error) {
+    error = true as any;
+  }
+
+  return error;
+};
+
 export const getUser = async () => {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();

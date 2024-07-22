@@ -55,6 +55,9 @@ import { FbFeedbackButton } from "./featurebase/fb-feedback-button";
 import { useUser } from "@/hooks/use-user";
 // import { FbChangelogButton } from "./featurebase/fb-changelog-button";
 import { NotificationCard } from "./notification-card";
+import { useTransition } from "react";
+import { signOut } from "@/plugins/supabase/auth";
+import { useRouter } from "next/navigation";
 
 export interface NavbarProps {
   routes: Route[];
@@ -116,6 +119,20 @@ export const Navbar: FC<NavbarProps> = ({
   // ];
   const { user, setUser } = useUser();
   const isAuthed = user?.aud === "authenticated" || false;
+
+  const router = useRouter();
+
+  const [isPending, startTransition] = useTransition();
+  const submitSignOut = () => {
+    startTransition(async () => {
+      const error = await signOut();
+      if (error) {
+        return;
+      }
+      router.refresh();
+    });
+  };
+
   // console.log(user);
   // const isAuthed
   // const searchButton = (
@@ -519,7 +536,11 @@ export const Navbar: FC<NavbarProps> = ({
                   <DropdownItem key="help_and_feedback">
                     Help & Feedback
                   </DropdownItem>
-                  <DropdownItem key="logout" color="danger">
+                  <DropdownItem
+                    key="logout"
+                    color={currentThemeColor as any}
+                    onClick={submitSignOut}
+                  >
                     Log Out
                   </DropdownItem>
                 </DropdownMenu>
