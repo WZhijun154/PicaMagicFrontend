@@ -1,6 +1,6 @@
 import { IconSvgProps } from "@/types";
 
-export const FlashIcon = ({
+export const LockIcon = ({
   size = 24,
   width,
   height,
@@ -12,17 +12,17 @@ export const FlashIcon = ({
     focusable="false"
     height={size || height}
     role="presentation"
-    viewBox="0 0 24 24"
+    viewBox="0 0 32 32"
     width={size || width}
     {...props}
   >
     <path
-      d="M6.09 13.28h3.09v7.2c0 1.68.91 2.02 2.02.76l7.57-8.6c.93-1.05.54-1.92-.87-1.92h-3.09v-7.2c0-1.68-.91-2.02-2.02-.76l-7.57 8.6c-.92 1.06-.53 1.92.87 1.92Z"
+      fill="none"
       stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeMiterlimit={10}
-      strokeWidth={1.5}
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M16 24v-4m5-5V8a5 5 0 0 0-10 0v7M6 27V17a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2"
     />
   </svg>
 );

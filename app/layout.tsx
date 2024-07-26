@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import { clsx } from "@nextui-org/shared-utils";
 
 import { Providers } from "./providers";
-
+import { StrictMode } from "react";
 import { Cmdk } from "@/components/cmdk";
 import manifest from "@/config/routes.json";
 import { siteConfig } from "@/config/site";
@@ -34,10 +34,10 @@ export const metadata: Metadata = {
     "UI Framework",
     "UI Design System",
   ],
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
+  // themeColor: [
+  //   { media: "(prefers-color-scheme: light)", color: "white" },
+  //   { media: "(prefers-color-scheme: dark)", color: "black" },
+  // ],
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon-32x32.png",
@@ -48,11 +48,11 @@ export const metadata: Metadata = {
   openGraph: siteConfig.openGraph,
   authors: [
     {
-      name: "jrgarciadev",
+      name: "zhijun.wang",
       url: "https://jrgarciadev.com",
     },
   ],
-  creator: "jrgarciadev",
+  creator: "zhijun.wang",
   alternates: {
     canonical: "https://nextui.org",
     types: {

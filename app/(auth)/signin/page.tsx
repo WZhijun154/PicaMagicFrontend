@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { emailPlaceHolder, passwordPlaceHolder } from "@/utils/constStr";
-import { useTransition } from "react";
+import { useTransition, useState } from "react";
 import React from "react";
 import {
   Button,
@@ -13,28 +13,65 @@ import {
   Card,
 } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
-import { Background } from "@/utils/background";
+import { Background } from "@/components/background";
 import { useCurrentThemeColor } from "@/hooks/use-current-theme-color";
 import { signIn } from "@/plugins/supabase/auth";
 import { useUser } from "@/hooks/use-user";
+import { AuthStatus } from "@/types/auth";
+
 export default function SignInPage() {
   const themeColor = useCurrentThemeColor({});
   const [isVisible, setIsVisible] = React.useState(false);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [formSubmited, setFormSubmited] = useState(false);
+
+  const validateEmail = (value: string) =>
+    value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
+
+  const isInvalidEmail = React.useMemo(() => {
+    if (email === "" && !formSubmited) return false;
+    return validateEmail(email) ? false : true;
+  }, [email, formSubmited]);
+
+  const isInvalidPassword = React.useMemo(() => {
+    if (password === "" && !formSubmited) return false;
+    // password must be at least 6 characters long
+    return password.length < 6;
+  }, [password, formSubmited]);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const router = useRouter();
 
-  const { user, setUser } = useUser();
+  const { user, userSignIn, userSignOut } = useUser();
   const [isPending, setTransition] = useTransition();
 
   const handleSubmit = (formData: FormData) => {
+    setFormSubmited(true);
+
+    if (
+      isInvalidEmail ||
+      isInvalidPassword ||
+      email === "" ||
+      password === ""
+    ) {
+      return;
+    }
+
     setTransition(async () => {
-      const { data, error } = await signIn(formData);
-      if (error) {
-        console.error(error);
+      const { data, authStatus } = await signIn(formData);
+      if (authStatus === AuthStatus.EMAIL_NOT_CONFIRMED) {
+        console.error(authStatus);
+        // TODO maybe need to use alert
+        return;
+      } else if (authStatus === AuthStatus.INVALID_LOGIN_CREDENTIALS) {
+        console.error(authStatus);
+        // TODO maybe need to use alert
         return;
       }
+      userSignIn(data.user);
       // setTransition(() => {
       //   setUser(data.user);
       // });
@@ -56,6 +93,9 @@ export default function SignInPage() {
               type="email"
               variant="bordered"
               color={themeColor as any}
+              isInvalid={isInvalidEmail}
+              onValueChange={setEmail}
+              errorMessage="Invalid email address"
             />
             <Input
               color={themeColor as any}
@@ -79,9 +119,17 @@ export default function SignInPage() {
               placeholder={passwordPlaceHolder}
               type={isVisible ? "text" : "password"}
               variant="bordered"
+              onValueChange={setPassword}
+              isInvalid={isInvalidPassword}
+              errorMessage="Password must be at least 6 characters long"
             />
             <div className="flex items-center justify-between px-1 py-2">
-              <Checkbox name="remember" size="sm" color={themeColor as any}>
+              <Checkbox
+                name="remember"
+                size="sm"
+                color={themeColor as any}
+                defaultSelected
+              >
                 Remember me
               </Checkbox>
               <Link

@@ -1,6 +1,5 @@
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-
+import { useMemo } from "react";
 
 const path2color: Record<string, string> = {
     "/": "secondary",
@@ -11,21 +10,17 @@ const path2color: Record<string, string> = {
     "/deblur": "secondary",
 }
 
-
 interface CurrentColorThemeProps {
     intensity?: number;
 }
 
 export function useCurrentThemeColor({intensity}: CurrentColorThemeProps) {
     const pathname = usePathname();
-    const [currentColor, setCurrentColor] = useState("secondary");
-
-    useEffect(() => {
-        const color = path2color[pathname] ?? "secondary";
-        setCurrentColor(color);
+    const currentColor = useMemo(() => {
+        return path2color[pathname] || "secondary";
     }, [pathname]);
 
     return currentColor + (intensity ? `-${intensity}` : "");
-} 
+}
 
 

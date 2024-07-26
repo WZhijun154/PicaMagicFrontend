@@ -1,6 +1,6 @@
 import { IconSvgProps } from "@/types";
 
-export const FlashIcon = ({
+export const PhLightningBoldIcon = ({
   size = 24,
   width,
   height,

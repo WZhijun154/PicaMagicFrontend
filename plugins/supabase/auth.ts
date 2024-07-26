@@ -1,6 +1,7 @@
 "use server";
 import { createClient } from "./server";
-import { redirect } from "next/navigation";
+import { AuthStatus } from "@/types/auth"; 
+
 
 export const signIn = async (formData: FormData) => {
   const email = formData.get("email") as string;
@@ -12,11 +13,15 @@ export const signIn = async (formData: FormData) => {
     password: password,
   });
 
-  if (error) {
-    error = true as any;
+  let authStatus: AuthStatus = AuthStatus.DEFAULT;
+  if (error?.message === AuthStatus.EMAIL_NOT_CONFIRMED) {
+    authStatus = AuthStatus.EMAIL_NOT_CONFIRMED;
+  } else if (error?.message === AuthStatus.INVALID_LOGIN_CREDENTIALS) {
+    authStatus = AuthStatus.INVALID_LOGIN_CREDENTIALS;
+  } else {
+    authStatus = AuthStatus.SUCCESS;
   }
-
-  return {data, error}
+  return {data, authStatus}
 };
 
 
@@ -36,11 +41,14 @@ export const signUp = async (formData: FormData) => {
     },
   });
 
-  if (error) {
-    error = true as any;
+  let authStatus: AuthStatus = AuthStatus.DEFAULT;
+  if (error?.message === AuthStatus.EMAIL_RATE_LIMIT_EXCEEDED) {
+    authStatus = AuthStatus.EMAIL_RATE_LIMIT_EXCEEDED;
+  } else {
+    authStatus = AuthStatus.SUCCESS;
   }
 
-  return {data, error}
+  return {data, authStatus}
 };
 
 export const signOut = async () => {
@@ -56,7 +64,7 @@ export const signOut = async () => {
 export const getUser = async () => {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
-  return data;
+  return data.user;
 }
 
 

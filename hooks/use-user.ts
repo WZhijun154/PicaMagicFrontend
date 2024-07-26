@@ -1,34 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { getUser } from '@/plugins/supabase/auth';
 import { User } from '@supabase/supabase-js';
-import { usePathname } from 'next/navigation';
+import { userAtom } from '@/atoms/userAtom';
+import { useAtom } from 'jotai';
 
-export function useUser() {
-  const [user, setUser] = useState<User | null>(null);
-  const pathname = usePathname();
+export const useUser = () => {
+  const [user, setUser] = useAtom(userAtom); 
+  const userSignIn = (userData: User | null) => {
+    setUser(userData);
+  }
+
+  const userSignOut = () => {
+    setUser(null);
+  }
+
+  const fetchUser = async () => {
+    try {
+      const userData = await getUser();
+      setUser(userData);
+    } catch (error) {
+      setUser(null);
+    }
+  };
 
   useEffect(() => {
-    let isMounted = true;
-    const fetchUser = async () => {
-      try {
-        const userData = await getUser();
-        if (isMounted) {
-          setUser(userData.user);
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        if (isMounted) {
-          setUser(null);
-        }
-      }
-    };
-
+    // console.log('fetching user');
     fetchUser();
+  }, []);
 
-    return () => {
-      isMounted = false;
-    };
-  }, [pathname]);
-
-  return { user, setUser };
+  return { user, userSignIn, userSignOut };
 }

@@ -16,7 +16,7 @@ import { Button } from "@nextui-org/react";
 import { Checkbox } from "@nextui-org/react";
 import { RadioGroup, Radio } from "@nextui-org/react";
 import { useCurrentThemeColor } from "@/hooks/use-current-theme-color";
-import { Background } from "@/utils/background";
+import { Background } from "../background";
 
 function Stepper() {
   const stepperColor = useCurrentThemeColor({});

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useState, useMemo } from "react";
 import {
   Button,
   Input,
@@ -17,13 +18,48 @@ import {
   usernamePlaceHolder,
   passwordPlaceHolder,
 } from "@/utils/constStr";
-import { Background } from "@/utils/background";
+import { Background } from "@/components/background";
 import { useCurrentThemeColor } from "@/hooks/use-current-theme-color";
 import { signUp } from "@/plugins/supabase/auth";
 import { useTransition } from "react";
+import { useUser } from "@/hooks/use-user";
+import { AuthStatus } from "@/types/auth";
 
 export default function SignUpPage() {
   const themeColor = useCurrentThemeColor({});
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [formSubmited, setFormSubmited] = useState(false);
+  // const [isInvalid, setIsInvalid] = useState(false);
+
+  const isInvalidUsername = useMemo(() => {
+    if (username === "" && !formSubmited) return false;
+    // username must be at least 3 characters long
+    return username.length < 3;
+  }, [username, formSubmited]);
+
+  const validateEmail = (value: string) =>
+    value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
+
+  const isInvalidEmail = React.useMemo(() => {
+    if (email === "" && !formSubmited) return false;
+
+    return validateEmail(email) ? false : true;
+  }, [email, formSubmited]);
+
+  const isInvalidPassword = React.useMemo(() => {
+    if (password === "" && !formSubmited) return false;
+    // password must be at least 6 characters long
+    return password.length < 6;
+  }, [password, formSubmited]);
+
+  const isInvalidConfirmPassword = React.useMemo(() => {
+    if (confirmPassword === "" && !formSubmited) return false;
+    return confirmPassword !== password;
+  }, [confirmPassword, password, formSubmited]);
 
   const [isVisible, setIsVisible] = React.useState(false);
   const [isConfirmVisible, setIsConfirmVisible] = React.useState(false);
@@ -32,22 +68,35 @@ export default function SignUpPage() {
   const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible);
 
   const router = useRouter();
-
+  const { user, userSignIn, userSignOut } = useUser();
   //   const { pending, action } = experimental_useFormStatus();
   const [isPending, setTransition] = useTransition();
 
   const handleSubmit = (formData: FormData) => {
-    setTransition(async () => {
-      const { data, error } = await signUp(formData);
+    setFormSubmited(true);
+    // prevent submission if any field is invalid
+    if (
+      isInvalidUsername ||
+      isInvalidEmail ||
+      isInvalidPassword ||
+      isInvalidConfirmPassword ||
+      username === "" ||
+      email === "" ||
+      password === "" ||
+      confirmPassword === ""
+    ) {
+      return;
+    }
 
-      if (error) {
+    setTransition(async () => {
+      const { data, authStatus } = await signUp(formData);
+      if (authStatus !== AuthStatus.SUCCESS) {
         // failed to sign in
-        console.error(error);
+        console.error(authStatus);
         return;
       }
-      // redirect to dashboard
-      // console.log("Sign up successful");
-      router.push("/");
+      // userSignIn(data.user);
+      router.push("/email-confirmation");
     });
   };
 
@@ -66,6 +115,9 @@ export default function SignUpPage() {
               type="text"
               variant="bordered"
               color={themeColor as any}
+              isInvalid={isInvalidUsername}
+              onValueChange={setUsername}
+              errorMessage="Username must be at least 3 characters long"
             />
             <Input
               isRequired
@@ -75,6 +127,9 @@ export default function SignUpPage() {
               type="email"
               variant="bordered"
               color={themeColor as any}
+              isInvalid={isInvalidEmail}
+              onValueChange={setEmail}
+              errorMessage="Invalid email address"
             />
             <Input
               isRequired
@@ -99,6 +154,9 @@ export default function SignUpPage() {
               placeholder={passwordPlaceHolder}
               type={isVisible ? "text" : "password"}
               variant="bordered"
+              onValueChange={setPassword}
+              isInvalid={isInvalidPassword}
+              errorMessage="Password must be at least 6 characters long"
             />
             <Input
               color={themeColor as any}
@@ -123,6 +181,9 @@ export default function SignUpPage() {
               placeholder={passwordPlaceHolder}
               type={isConfirmVisible ? "text" : "password"}
               variant="bordered"
+              isInvalid={isInvalidConfirmPassword}
+              onValueChange={setConfirmPassword}
+              errorMessage="Passwords do not match"
             />
             {/* <Checkbox
               isRequired
@@ -145,6 +206,7 @@ export default function SignUpPage() {
               type="submit"
               //   isLoading={pending}
               formAction={handleSubmit}
+              isLoading={isPending}
             >
               Sign Up
             </Button>
@@ -172,8 +234,8 @@ export default function SignUpPage() {
       </div> */}
           <p className="text-center text-small">
             Already have an account?&nbsp;
-            <Link href="/login" size="sm" color={themeColor as any}>
-              Log In
+            <Link href="/signin" size="sm" color={themeColor as any}>
+              Sign In
             </Link>
           </p>
         </Card>

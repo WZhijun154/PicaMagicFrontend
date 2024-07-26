@@ -1,5 +1,6 @@
 import React from "react";
 import { Code } from "@nextui-org/code";
+// import { Icon } from "@iconify/react";
 
 import {
   MoonIcon,
@@ -13,6 +14,9 @@ import {
   HtmlLogoLinearIcon,
   CubesLinearIcon,
 } from "@/components/icons";
+import { PhLightningBoldIcon } from "@/components/icons/lightning";
+import { LockIcon } from "@/components/icons/lock";
+import { DiamondIcon } from "@/components/icons/diamond";
 
 export default {
   topFeatures: [
@@ -20,13 +24,14 @@ export default {
       title: "Fast",
       description:
         "Utilizes the latest AI inference engine to ensure rapid processing and quick results.",
-      icon: <FlashIcon className="text-pink-500" />,
+      // icon: <FlashIcon className="text-pink-500" />,
+      icon: <PhLightningBoldIcon className="text-pink-500" />,
     },
     {
       title: "Privacy",
       description:
         "Your data remains yours, we guarantee it will not be used for any other purposes.",
-      icon: <FlashIcon className="text-pink-500" />,
+      icon: <LockIcon className="text-pink-500" />,
     },
     {
       title: "Simple",
@@ -38,7 +43,7 @@ export default {
       title: "High Quality",
       description:
         "Utilizes advanced AI to ensure top-notch photo enhancement and editing quality.",
-      icon: <MagicIcon className="text-pink-500" />,
+      icon: <DiamondIcon />,
     },
   ],
   fullFeatures: [

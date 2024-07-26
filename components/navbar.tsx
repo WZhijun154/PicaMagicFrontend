@@ -81,7 +81,7 @@ export const Navbar: FC<NavbarProps> = ({
   // const isMounted = useIsMounted();
 
   const pathname = usePathname();
-
+  const isMounted = useIsMounted();
   // const cmdkStore = useCmdkStore();
 
   // useEffect(() => {
@@ -117,7 +117,8 @@ export const Navbar: FC<NavbarProps> = ({
   //   "/docs/guide/installation",
   //   "/docs/guide/upgrade-to-v2",
   // ];
-  const { user, setUser } = useUser();
+  // console.log("Navbar rendered");
+  const { user, userSignIn, userSignOut } = useUser();
   const isAuthed = user?.aud === "authenticated" || false;
 
   const router = useRouter();
@@ -129,7 +130,8 @@ export const Navbar: FC<NavbarProps> = ({
       if (error) {
         return;
       }
-      router.refresh();
+      userSignOut();
+      router.push("/");
     });
   };
 
@@ -541,7 +543,7 @@ export const Navbar: FC<NavbarProps> = ({
                     color={currentThemeColor as any}
                     onClick={submitSignOut}
                   >
-                    Log Out
+                    Sign Out
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
