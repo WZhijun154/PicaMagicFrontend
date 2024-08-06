@@ -1,8 +1,8 @@
 import React from "react";
-import {clsx} from "@nextui-org/shared-utils";
+import { clsx } from "@nextui-org/shared-utils";
 
-import {IconSvgProps} from "@/types";
-import {dataAttr} from "@/utils";
+import { IconSvgProps } from "@/types";
+import { dataAttr } from "@/utils";
 export interface LogoProps extends IconSvgProps {
   auto?: boolean;
   small?: boolean;
@@ -19,7 +19,10 @@ export const SmallLogo: React.FC<LogoProps> = ({
   ...props
 }) => (
   <svg
-    className={clsx("data-[auto=true]:sm:hidden block text-foreground", className)}
+    className={clsx(
+      "data-[auto=true]:sm:hidden block text-foreground",
+      className
+    )}
     data-auto={dataAttr(auto)}
     fill="currentColor"
     height={height || size || 25}
@@ -31,11 +34,15 @@ export const SmallLogo: React.FC<LogoProps> = ({
   </svg>
 );
 
-export const LargeLogo: React.FC<LogoProps> = ({auto, className, ...props}) => (
+export const LargeLogo: React.FC<LogoProps> = ({
+  auto,
+  className,
+  ...props
+}) => (
   <svg
     className={clsx(
       "data-[auto=true]:hidden data-[auto=true]:sm:block block text-foreground",
-      className,
+      className
     )}
     data-auto={dataAttr(auto)}
     fill="currentColor"
@@ -46,7 +53,7 @@ export const LargeLogo: React.FC<LogoProps> = ({auto, className, ...props}) => (
   </svg>
 );
 
-export const NextUILogo: React.FC<LogoProps> = ({auto, small, ...props}) => {
+export const NextUILogo: React.FC<LogoProps> = ({ auto, small, ...props }) => {
   if (auto) {
     return (
       <div>

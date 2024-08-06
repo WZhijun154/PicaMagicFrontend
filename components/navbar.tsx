@@ -22,6 +22,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   Chip,
+  Image,
 } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { dataFocusVisibleClasses } from "@nextui-org/theme";
@@ -58,6 +59,7 @@ import { NotificationCard } from "./notification-card";
 import { useTransition } from "react";
 import { signOut } from "@/plugins/supabase/auth";
 import { useRouter } from "next/navigation";
+import { title } from "./primitives";
 
 export interface NavbarProps {
   routes: Route[];
@@ -231,8 +233,13 @@ export const Navbar: FC<NavbarProps> = ({
             href="/"
             onClick={() => handlePressNavbarItem("Home", "/")}
           >
-            <SmallLogo className="w-6 h-6 md:hidden" />
-            <LargeLogo className="h-5 md:h-6" />
+            {/* <SmallLogo className="w-6 h-6 md:hidden" />
+            <LargeLogo className="h-5 md:h-6" /> */}
+            <p
+              className={title({ size: "logo", color: "violet", italic: true })}
+            >
+              PictaMagic
+            </p>
           </NextLink>
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-start items-center">

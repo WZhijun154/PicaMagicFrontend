@@ -1,12 +1,9 @@
-"use client";
+"use server";
 import React from "react";
-import { Link } from "@nextui-org/link";
-import { useCurrentThemeColor } from "@/hooks/use-current-theme-color";
 import { title, subtitle } from "@/components/primitives";
 import { Spacer } from "@nextui-org/spacer";
 
-const EmailConfirmationPage = () => {
-  const themeColor = useCurrentThemeColor({});
+const EmailConfirmationPage = async () => {
   return (
     <>
       {/* <Background /> */}

@@ -32,7 +32,7 @@ async function getData() {
 }
 
 export default async function Home() {
-  const data = await getData();
+  // const data = await getData();
 
   return (
     <main className="container mx-auto max-w-7xl px-6 flex-grow">
