@@ -31,7 +31,7 @@ async function getData() {
   }
 }
 
-export default async function Home() {
+export default function Home() {
   // const data = await getData();
 
   return (

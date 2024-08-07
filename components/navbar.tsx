@@ -55,7 +55,7 @@ import { trackEvent } from "@/utils/va";
 import { FbFeedbackButton } from "./featurebase/fb-feedback-button";
 import { useUser } from "@/hooks/use-user";
 // import { FbChangelogButton } from "./featurebase/fb-changelog-button";
-import { NotificationCard } from "./notification-card";
+import { NotificationCard } from "./auth-state/notification-card";
 import { useTransition } from "react";
 import { signOut } from "@/plugins/supabase/auth";
 import { useRouter } from "next/navigation";
@@ -67,6 +67,7 @@ export interface NavbarProps {
   tag?: string;
   slug?: string;
   children?: ReactNode;
+  authState?: ReactNode;
 }
 
 export const Navbar: FC<NavbarProps> = ({
@@ -75,6 +76,7 @@ export const Navbar: FC<NavbarProps> = ({
   mobileRoutes = [],
   slug,
   tag,
+  authState,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean | undefined>(false);
   // const [commandKey, setCommandKey] = useState<"ctrl" | "command">("command");
@@ -120,22 +122,6 @@ export const Navbar: FC<NavbarProps> = ({
   //   "/docs/guide/upgrade-to-v2",
   // ];
   // console.log("Navbar rendered");
-  const { user, userSignIn, userSignOut } = useUser();
-  const isAuthed = user?.aud === "authenticated" || false;
-
-  const router = useRouter();
-
-  const [isPending, startTransition] = useTransition();
-  const submitSignOut = () => {
-    startTransition(async () => {
-      const error = await signOut();
-      if (error) {
-        return;
-      }
-      userSignOut();
-      router.push("/");
-    });
-  };
 
   // console.log(user);
   // const isAuthed
@@ -472,118 +458,9 @@ export const Navbar: FC<NavbarProps> = ({
             Sponsor
           </Button>
         </NavbarItem> */}
-        {isAuthed ? (
-          <>
-            {/* Settings */}
-            <NavbarItem className="hidden lg:flex">
-              <Button isIconOnly radius="full" variant="light">
-                <Icon
-                  className="text-default-500"
-                  icon="solar:settings-linear"
-                  width={24}
-                />
-              </Button>
-            </NavbarItem>
-            {/* Notifications */}
-            <NavbarItem className="flex">
-              <Popover offset={12} placement="bottom-end">
-                <PopoverTrigger>
-                  <Button
-                    disableRipple
-                    isIconOnly
-                    className="overflow-visible"
-                    radius="full"
-                    variant="light"
-                  >
-                    <Badge
-                      color={currentThemeColor as any}
-                      content="5"
-                      showOutline={false}
-                      size="md"
-                    >
-                      <Icon
-                        className="text-default-500"
-                        icon="solar:bell-linear"
-                        width={22}
-                      />
-                    </Badge>
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="max-w-[90vw] p-0 sm:max-w-[380px]">
-                  <NotificationCard className="w-full shadow-none" />
-                </PopoverContent>
-              </Popover>
-            </NavbarItem>
-            {/* User Menu */}
-            <NavbarItem className="px-2">
-              <Dropdown placement="bottom-end">
-                <DropdownTrigger>
-                  <button className="mt-1 h-8 w-8 transition-transform">
-                    <Badge
-                      color={currentThemeColor as any}
-                      content=""
-                      placement="bottom-right"
-                      shape="circle"
-                    >
-                      <Avatar
-                        size="sm"
-                        src="https://i.pravatar.cc/150?u=a04258114e29526708c"
-                      />
-                    </Badge>
-                  </button>
-                </DropdownTrigger>
-                <DropdownMenu aria-label="Profile Actions" variant="flat">
-                  <DropdownItem key="profile" className="h-14 gap-2">
-                    <p className="font-semibold">Signed in as</p>
-                    <p className="">{user?.email}</p>
-                  </DropdownItem>
-                  <DropdownItem key="settings">My Settings</DropdownItem>
-                  {/* <DropdownItem key="team_settings">Team Settings</DropdownItem> */}
-                  {/* <DropdownItem key="analytics">Analytics</DropdownItem> */}
-                  {/* <DropdownItem key="system">System</DropdownItem> */}
-                  {/* <DropdownItem key="configurations">Configurations</DropdownItem> */}
-                  <DropdownItem key="help_and_feedback">
-                    Help & Feedback
-                  </DropdownItem>
-                  <DropdownItem
-                    key="logout"
-                    color={currentThemeColor as any}
-                    onClick={submitSignOut}
-                  >
-                    Sign Out
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </NavbarItem>
-          </>
-        ) : (
-          <ul className="hidden lg:flex gap-4 justify-start items-center">
-            <NavbarItem>
-              <Button
-                radius="full"
-                variant="light"
-                color={currentThemeColor as any}
-                isDisabled={pathname === "/signin"}
-              >
-                <Link href="signin" color={currentThemeColor as any}>
-                  Sign in
-                </Link>
-              </Button>
-            </NavbarItem>
-            <NavbarItem>
-              <Button
-                radius="full"
-                variant="flat"
-                color={currentThemeColor as any}
-                isDisabled={pathname === "/signup"}
-              >
-                <Link href="signup" color={currentThemeColor as any}>
-                  Sign Up
-                </Link>
-              </Button>
-            </NavbarItem>
-          </ul>
-        )}
+
+        {authState}
+
         {/* <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="hidden sm:flex lg:hidden ml-4"

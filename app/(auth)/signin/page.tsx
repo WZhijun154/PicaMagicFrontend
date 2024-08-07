@@ -45,7 +45,7 @@ export default function SignInPage() {
 
   const router = useRouter();
 
-  const { user, userSignIn, userSignOut } = useUser();
+  // const { user, userSignIn, userSignOut } = useUser();
   const [isPending, setTransition] = useTransition();
 
   const handleSubmit = (formData: FormData) => {
@@ -71,7 +71,7 @@ export default function SignInPage() {
         // TODO maybe need to use alert
         return;
       }
-      userSignIn(data.user);
+      // userSignIn(data.user);
       // setTransition(() => {
       //   setUser(data.user);
       // });

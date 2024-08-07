@@ -13,6 +13,7 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ProBanner } from "@/components/pro-banner";
 import { Spacer } from "@nextui-org/spacer";
+import { AuthState } from "@/components/auth-state/auth-state";
 
 export const metadata: Metadata = {
   title: {
@@ -65,7 +66,7 @@ export const metadata: Metadata = {
     "viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -82,9 +83,11 @@ export default async function RootLayout({
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex flex-col" id="app-container">
             {/* <ProBanner /> */}
+
             <Navbar
               mobileRoutes={manifest.mobileRoutes}
               routes={manifest.routes}
+              authState={(<AuthState />) as unknown as JSX.Element}
             />
             {children}
             <Spacer y={24} />
