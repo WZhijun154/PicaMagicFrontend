@@ -57,7 +57,6 @@ import { useUser } from "@/hooks/use-user";
 // import { FbChangelogButton } from "./featurebase/fb-changelog-button";
 import { NotificationCard } from "./auth-state/notification-card";
 import { useTransition } from "react";
-import { signOut } from "@/plugins/supabase/auth";
 import { useRouter } from "next/navigation";
 import { title } from "./primitives";
 

@@ -7,7 +7,6 @@ import { Icon } from "@iconify/react";
 import { Avatar } from "@nextui-org/avatar";
 import { useTransition } from "react";
 import { signOut } from "@/plugins/supabase/auth";
-import { useUser } from "@/hooks/use-user";
 import {
   DropdownItem,
   DropdownTrigger,
@@ -15,6 +14,14 @@ import {
   DropdownMenu,
 } from "@nextui-org/dropdown";
 import { User } from "@supabase/supabase-js";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "@nextui-org/modal";
+import { useDisclosure } from "@nextui-org/react";
 
 export const SignInButton = () => {
   const router = useRouter();
@@ -85,6 +92,7 @@ export const AvatarBadge = () => {
 };
 
 export const UserDropMenu = ({ user }: { user: User | null }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const currentThemeColor = useCurrentThemeColor({});
   const router = useRouter();
   // const { userSignOut } = useUser();
@@ -100,31 +108,62 @@ export const UserDropMenu = ({ user }: { user: User | null }) => {
     });
   };
   return (
-    <Dropdown placement="bottom-end">
-      <DropdownTrigger>
-        <button className="mt-1 h-8 w-8 transition-transform">
-          <AvatarBadge />
-        </button>
-      </DropdownTrigger>
-      <DropdownMenu aria-label="Profile Actions" variant="flat">
-        <DropdownItem key="profile" className="h-14 gap-2">
-          <p className="font-semibold">Signed in as</p>
-          <p className="">{user?.email}</p>
-        </DropdownItem>
-        <DropdownItem key="settings">My Settings</DropdownItem>
-        {/* <DropdownItem key="team_settings">Team Settings</DropdownItem> */}
-        {/* <DropdownItem key="analytics">Analytics</DropdownItem> */}
-        {/* <DropdownItem key="system">System</DropdownItem> */}
-        {/* <DropdownItem key="configurations">Configurations</DropdownItem> */}
-        <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-        <DropdownItem
-          key="logout"
-          color={currentThemeColor as any}
-          onClick={submitSignOut}
-        >
-          Sign Out
-        </DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
+    <>
+      <Modal size="sm" isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalBody className="flex flex-col gap-1 items-center justify-center mt-8 text-base font-semibold">
+                Are you sure you want to sign out?
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  color={currentThemeColor as any}
+                  variant="light"
+                  onPress={onClose}
+                  fullWidth
+                >
+                  Cancel
+                </Button>
+                <Button
+                  color={currentThemeColor as any}
+                  onPress={submitSignOut}
+                  fullWidth
+                  isLoading={isPending}
+                >
+                  Sign Out
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      <Dropdown placement="bottom-end">
+        <DropdownTrigger>
+          <button className="mt-1 h-8 w-8 transition-transform">
+            <AvatarBadge />
+          </button>
+        </DropdownTrigger>
+        <DropdownMenu aria-label="Profile Actions" variant="flat">
+          <DropdownItem key="profile" className="h-14 gap-2">
+            <p className="font-semibold">Signed in as</p>
+            <p className="">{user?.email}</p>
+          </DropdownItem>
+          <DropdownItem key="settings">My Settings</DropdownItem>
+          {/* <DropdownItem key="team_settings">Team Settings</DropdownItem> */}
+          {/* <DropdownItem key="analytics">Analytics</DropdownItem> */}
+          {/* <DropdownItem key="system">System</DropdownItem> */}
+          {/* <DropdownItem key="configurations">Configurations</DropdownItem> */}
+          <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
+          <DropdownItem
+            key="logout"
+            color={currentThemeColor as any}
+            onClick={onOpen}
+          >
+            Sign Out
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    </>
   );
 };

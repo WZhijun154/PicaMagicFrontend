@@ -66,6 +66,7 @@ export const signUp = async (formData: FormData) => {
       password: password,
       options: {
         data: {
+          // emailRedirectTo: "xxx",
           username: username,
         },
       },
@@ -92,15 +93,7 @@ export const signUp = async (formData: FormData) => {
     } else {
       authStatus = AuthStatus.SUCCESS;
     }
-    // if (authStatus === AuthStatus.SUCCESS) {
-    //   const confirmationLink = `http://localhost:3000/email-confirmation/confirm?token=${data.user!.id!}`;
-    //   await sendMail({
-    //       to: email,
-    //       subject: "Confirm your email",
-    //       text: `Please confirm your email by clicking the following link: ${confirmationLink}`,
-    //       html: `<a href='${confirmationLink}'>Confirm</a>`
-    //   });
-    // }
+
     return {data, authStatus}
   } catch (error) {
     console.error('Failed to sign up user after multiple retries', error);
