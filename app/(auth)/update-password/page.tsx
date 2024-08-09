@@ -20,36 +20,19 @@ import {
 } from "@/utils/constStr";
 import { Background } from "@/components/background";
 import { useCurrentThemeColor } from "@/hooks/use-current-theme-color";
-import { signUp } from "@/plugins/supabase/auth";
+import { resetPassword } from "@/plugins/supabase/auth";
 import { useTransition } from "react";
-import { useUser } from "@/hooks/use-user";
 import { AuthStatus } from "@/types/auth";
 import toast from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
 
-export default function SignUpPage() {
+export default function PasswordResetPage() {
   const themeColor = useCurrentThemeColor({});
 
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [formSubmited, setFormSubmited] = useState(false);
   // const [isInvalid, setIsInvalid] = useState(false);
-
-  const isInvalidUsername = useMemo(() => {
-    if (username === "" && !formSubmited) return false;
-    // username must be at least 3 characters long
-    return username.length < 3;
-  }, [username, formSubmited]);
-
-  const validateEmail = (value: string) =>
-    value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
-
-  const isInvalidEmail = React.useMemo(() => {
-    if (email === "" && !formSubmited) return false;
-
-    return validateEmail(email) ? false : true;
-  }, [email, formSubmited]);
 
   const isInvalidPassword = React.useMemo(() => {
     if (password === "" && !formSubmited) return false;
@@ -69,7 +52,6 @@ export default function SignUpPage() {
   const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible);
 
   const router = useRouter();
-  // const { user, userSignIn, userSignOut } = useUser();
   //   const { pending, action } = experimental_useFormStatus();
   const [isPending, setTransition] = useTransition();
 
@@ -77,12 +59,8 @@ export default function SignUpPage() {
     setFormSubmited(true);
     // prevent submission if any field is invalid
     if (
-      isInvalidUsername ||
-      isInvalidEmail ||
       isInvalidPassword ||
       isInvalidConfirmPassword ||
-      username === "" ||
-      email === "" ||
       password === "" ||
       confirmPassword === ""
     ) {
@@ -91,16 +69,16 @@ export default function SignUpPage() {
 
     setTransition(async () => {
       try {
-        const { authStatus } = await signUp(formData);
+        const { authStatus } = await resetPassword(formData);
         if (authStatus !== AuthStatus.SUCCESS) {
           toast.error("Something went wrong. Please try again.");
           return;
         }
-        router.push("/email-confirmation");
+        toast.success("Password reset successfully");
+        router.push("/");
         return;
       } catch (error) {
         toast.error("Something went wrong. Please try again.");
-        return;
       }
     });
   };
@@ -110,32 +88,8 @@ export default function SignUpPage() {
       <Background />
       <div className="flex flex-row items-center justify-center mt-36">
         <Card className="animate-appearance-in flex w-full max-w-sm flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small">
-          <p className="pb-2 text-xl font-medium">Sign Up</p>
+          <p className="pb-2 text-xl font-medium">Reset Password</p>
           <form className="flex flex-col gap-3">
-            <Input
-              isRequired
-              label="Username"
-              name="username"
-              placeholder={usernamePlaceHolder}
-              type="text"
-              variant="bordered"
-              color={themeColor as any}
-              isInvalid={isInvalidUsername}
-              onValueChange={setUsername}
-              errorMessage="Username must be at least 3 characters long"
-            />
-            <Input
-              isRequired
-              label="Email Address"
-              name="email"
-              placeholder={emailPlaceHolder}
-              type="email"
-              variant="bordered"
-              color={themeColor as any}
-              isInvalid={isInvalidEmail}
-              onValueChange={setEmail}
-              errorMessage="Invalid email address"
-            />
             <Input
               isRequired
               color={themeColor as any}
@@ -154,7 +108,7 @@ export default function SignUpPage() {
                   )}
                 </button>
               }
-              label="Password"
+              label="New Password"
               name="password"
               placeholder={passwordPlaceHolder}
               type={isVisible ? "text" : "password"}
@@ -181,7 +135,7 @@ export default function SignUpPage() {
                   )}
                 </button>
               }
-              label="Confirm Password"
+              label="Confirm New Password"
               name="confirmPassword"
               placeholder={passwordPlaceHolder}
               type={isConfirmVisible ? "text" : "password"}
@@ -190,59 +144,16 @@ export default function SignUpPage() {
               onValueChange={setConfirmPassword}
               errorMessage="Passwords do not match"
             />
-            {/* <Checkbox
-              isRequired
-              className="py-4"
-              size="sm"
-              color={themeColor as any}
-            >
-              I agree with the&nbsp;
-              <Link href="#" size="sm" color={themeColor as any}>
-                Terms
-              </Link>
-              &nbsp; and&nbsp;
-              <Link href="#" size="sm" color={themeColor as any}>
-                Privacy Policy
-              </Link>
-            </Checkbox> */}
             <Spacer y={2} />
             <Button
               color={themeColor as any}
               type="submit"
-              //   isLoading={pending}
               formAction={handleSubmit}
               isLoading={isPending}
             >
-              Sign Up
+              Reset
             </Button>
           </form>
-          {/* <div className="flex items-center gap-4 py-2">
-            <Divider className="flex-1" />
-            <p className="shrink-0 text-tiny text-default-500">OR</p>
-            <Divider className="flex-1" />
-          </div> */}
-          {/* <div className="flex flex-col gap-2">
-        <Button
-          startContent={<Icon icon="flat-color-icons:google" width={24} />}
-          variant="bordered"
-        >
-          Sign Up with Google
-        </Button>
-        <Button
-          startContent={
-            <Icon className="text-default-500" icon="fe:github" width={24} />
-          }
-          variant="bordered"
-        >
-          Sign Up with Github
-        </Button>
-      </div> */}
-          <p className="text-center text-small">
-            Already have an account?&nbsp;
-            <Link href="/signin" size="sm" color={themeColor as any}>
-              Sign In
-            </Link>
-          </p>
         </Card>
       </div>
     </>

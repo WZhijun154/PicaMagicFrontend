@@ -1,5 +1,5 @@
 {
-  "extends": ["../../.eslintrc.json"],
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
   "ignorePatterns": ["!**/*"],
   "overrides": [
     {

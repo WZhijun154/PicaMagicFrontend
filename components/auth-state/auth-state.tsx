@@ -8,9 +8,19 @@ import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/popover";
 import { NotificationCard } from "./notification-card";
 import { NotificationBadge, AvatarBadge } from "./auth-state-client-part";
 import { UserDropMenu } from "./auth-state-client-part";
+import { User } from "@supabase/supabase-js";
+import { AuthStatus } from "@/types/auth";
 
 async function AuthState() {
-  const user = await getUser();
+  let user: User | null = null;
+  try {
+    const { data, authStatus } = await getUser();
+    if (authStatus === AuthStatus.SUCCESS) {
+      user = data!.user;
+    }
+  } catch (error) {
+    // do nothing
+  }
 
   if (!user) {
     return (

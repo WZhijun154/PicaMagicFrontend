@@ -1,23 +1,26 @@
-import { useEffect } from 'react';
-import { getUser } from '@/plugins/supabase/auth';
-import { User } from '@supabase/supabase-js';
-import { userAtom } from '@/atoms/userAtom';
-import { useAtom } from 'jotai';
+import { useEffect } from "react";
+import { getUser } from "@/plugins/supabase/auth";
+import { User } from "@supabase/supabase-js";
+import { userAtom } from "@/atoms/userAtom";
+import { useAtom } from "jotai";
+import { AuthStatus } from "@/types/auth";
 
 export const useUser = () => {
-  const [user, setUser] = useAtom(userAtom); 
+  const [user, setUser] = useAtom(userAtom);
   const userSignIn = (userData: User | null) => {
     setUser(userData);
-  }
+  };
 
   const userSignOut = () => {
     setUser(null);
-  }
+  };
 
   const fetchUser = async () => {
     try {
-      const userData = await getUser();
-      setUser(userData);
+      const { data, authStatus } = await getUser();
+      if (authStatus === AuthStatus.SUCCESS) {
+        setUser(data!.user);
+      }
     } catch (error) {
       setUser(null);
     }
@@ -29,4 +32,4 @@ export const useUser = () => {
   }, []);
 
   return { user, userSignIn, userSignOut };
-}
+};

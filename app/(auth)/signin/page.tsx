@@ -11,6 +11,11 @@ import {
   Link,
   Divider,
   Card,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  ModalContent,
 } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { Background } from "@/components/background";
@@ -18,6 +23,9 @@ import { useCurrentThemeColor } from "@/hooks/use-current-theme-color";
 import { signIn } from "@/plugins/supabase/auth";
 import { useUser } from "@/hooks/use-user";
 import { AuthStatus } from "@/types/auth";
+import { useDisclosure } from "@nextui-org/react";
+import { sendResetPasswordEmail } from "@/plugins/supabase/auth";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function SignInPage() {
   const themeColor = useCurrentThemeColor({});
@@ -46,7 +54,7 @@ export default function SignInPage() {
   const router = useRouter();
 
   // const { user, userSignIn, userSignOut } = useUser();
-  const [isPending, setTransition] = useTransition();
+  const [isSubmitPending, setSubmitTransition] = useTransition();
 
   const handleSubmit = (formData: FormData) => {
     setFormSubmited(true);
@@ -60,28 +68,83 @@ export default function SignInPage() {
       return;
     }
 
-    setTransition(async () => {
-      const { data, authStatus } = await signIn(formData);
-      if (authStatus === AuthStatus.EMAIL_NOT_CONFIRMED) {
-        console.error(authStatus);
-        // TODO maybe need to use alert
-        return;
-      } else if (authStatus === AuthStatus.INVALID_LOGIN_CREDENTIALS) {
-        console.error(authStatus);
-        // TODO maybe need to use alert
+    setSubmitTransition(async () => {
+      try {
+        const { authStatus } = await signIn(formData);
+        if (authStatus !== AuthStatus.SUCCESS) {
+          if (authStatus === AuthStatus.INVALID_LOGIN_CREDENTIALS) {
+            toast.error("Invalid email or password");
+          } else {
+            toast.error("Something went wrong, please try again later");
+          }
+          return;
+        }
+      } catch (error) {
+        toast.error("Something went wrong, please try again later");
         return;
       }
-      // userSignIn(data.user);
-      // setTransition(() => {
-      //   setUser(data.user);
-      // });
+      toast.success("Signed in successfully");
       router.push("/");
+    });
+  };
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [isSendingEmailPending, setSendEmailTransition] = useTransition();
+
+  const handleSendPasswordResetEmail = () => {
+    if (isInvalidEmail) {
+      return;
+    }
+
+    setSendEmailTransition(async () => {
+      const { authStatus } = await sendResetPasswordEmail(email);
+      if (authStatus !== AuthStatus.SUCCESS) {
+        toast.error("Failed to send email, please try again later");
+        return;
+      }
+      toast.success("Email sent successfully");
+      onClose();
     });
   };
 
   return (
     <>
       <Background />
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          <ModalHeader>Forgot Password</ModalHeader>
+          <ModalBody>
+            <p className="text-default-500">
+              Enter your email address and we'll send you a link to reset your
+              password.
+            </p>
+            <Input
+              label="Email Address"
+              name="email"
+              placeholder={emailPlaceHolder}
+              type="email"
+              variant="bordered"
+              color={themeColor as any}
+              isInvalid={isInvalidEmail}
+              onValueChange={setEmail}
+              errorMessage="Invalid email address"
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button color={themeColor as any} onClick={onClose} variant="light">
+              Cancel
+            </Button>
+            <Button
+              color={themeColor as any}
+              onClick={handleSendPasswordResetEmail}
+              isLoading={isSendingEmailPending}
+            >
+              Send
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <div className="flex flex-row items-center justify-center mt-48">
         <Card className="animate-appearance-in flex w-full max-w-sm flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small">
           <p className="pb-2 text-xl font-medium">Sign In</p>
@@ -132,20 +195,15 @@ export default function SignInPage() {
               >
                 Remember me
               </Checkbox>
-              <Link
-                className="text-default-500"
-                href="#"
-                size="sm"
-                color={themeColor as any}
-              >
-                Forgot password?
-              </Link>
+              <button type="button" onClick={onOpen}>
+                <p className="text-default-500 text-sm">Forgot password?</p>
+              </button>
             </div>
             <Button
               color={themeColor as any}
               type="submit"
               formAction={handleSubmit}
-              isLoading={isPending}
+              isLoading={isSubmitPending}
             >
               Sign in
             </Button>

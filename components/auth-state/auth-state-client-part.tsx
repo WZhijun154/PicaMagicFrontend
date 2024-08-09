@@ -22,6 +22,8 @@ import {
   ModalFooter,
 } from "@nextui-org/modal";
 import { useDisclosure } from "@nextui-org/react";
+import { AuthStatus } from "@/types/auth";
+import toast from "react-hot-toast";
 
 export const SignInButton = () => {
   const router = useRouter();
@@ -99,12 +101,19 @@ export const UserDropMenu = ({ user }: { user: User | null }) => {
   const [isPending, startTransition] = useTransition();
   const submitSignOut = () => {
     startTransition(async () => {
-      const error = await signOut();
-      if (error) {
+      try {
+        const authStatus = await signOut();
+        if (authStatus !== AuthStatus.SUCCESS) {
+          toast.error("Something went wrong. Please try again.");
+          return;
+        }
+        toast.success("Signed out successfully");
+        router.push("/");
+        return;
+      } catch (error) {
+        toast.error("Something went wrong. Please try again.");
         return;
       }
-      // userSignOut();
-      router.push("/");
     });
   };
   return (

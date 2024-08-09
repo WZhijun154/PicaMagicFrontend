@@ -14,6 +14,7 @@ import { Footer } from "@/components/footer";
 import { ProBanner } from "@/components/pro-banner";
 import { Spacer } from "@nextui-org/spacer";
 import { AuthState } from "@/components/auth-state/auth-state";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: {
@@ -83,7 +84,7 @@ export default function RootLayout({
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex flex-col" id="app-container">
             {/* <ProBanner /> */}
-
+            <Toaster />
             <Navbar
               mobileRoutes={manifest.mobileRoutes}
               routes={manifest.routes}
