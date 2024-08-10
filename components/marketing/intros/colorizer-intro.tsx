@@ -10,10 +10,7 @@ const titleNode = (
   <>
     <div>
       <span className={title({ size: "lg" })}>Bring</span>
-      <h1 className={title({ color: "yellow", size: "lg" })}>
-        {" "}
-        Vibrant Color{" "}
-      </h1>
+      <h1 className={title({ color: "yellow", size: "lg" })}> Vibrant Color</h1>
     </div>
     <p className={title({ size: "lg" })}>to Life</p>
   </>

@@ -88,7 +88,7 @@ export const AvatarBadge = () => {
       placement="bottom-right"
       shape="circle"
     >
-      <Avatar size="sm" src="https://i.pravatar.cc/150?u=a04258114e29526708c" />
+      <Avatar size="sm" name="Me" isBordered />
     </Badge>
   );
 };
@@ -122,22 +122,25 @@ export const UserDropMenu = ({ user }: { user: User | null }) => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalBody className="flex flex-col gap-1 items-center justify-center mt-8 text-base font-semibold">
-                Are you sure you want to sign out?
+              <ModalHeader>Sign Out</ModalHeader>
+              <ModalBody className="text-center">
+                <p className="text-default-500">
+                  Are you sure you want to sign out?{" "}
+                </p>
               </ModalBody>
               <ModalFooter>
                 <Button
                   color={currentThemeColor as any}
                   variant="light"
                   onPress={onClose}
-                  fullWidth
+                  // fullWidth
                 >
                   Cancel
                 </Button>
                 <Button
                   color={currentThemeColor as any}
                   onPress={submitSignOut}
-                  fullWidth
+                  // fullWidth
                   isLoading={isPending}
                 >
                   Sign Out
@@ -158,12 +161,12 @@ export const UserDropMenu = ({ user }: { user: User | null }) => {
             <p className="font-semibold">Signed in as</p>
             <p className="">{user?.email}</p>
           </DropdownItem>
-          <DropdownItem key="settings">My Settings</DropdownItem>
+          {/* <DropdownItem key="settings">My Settings</DropdownItem> */}
           {/* <DropdownItem key="team_settings">Team Settings</DropdownItem> */}
           {/* <DropdownItem key="analytics">Analytics</DropdownItem> */}
           {/* <DropdownItem key="system">System</DropdownItem> */}
           {/* <DropdownItem key="configurations">Configurations</DropdownItem> */}
-          <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
+          {/* <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem> */}
           <DropdownItem
             key="logout"
             color={currentThemeColor as any}

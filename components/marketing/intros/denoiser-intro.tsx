@@ -8,10 +8,8 @@ interface DenoiserIntroProps {
 
 const titleNode = (
   <>
-    {/* <h1 className={title({size: "lg"})}>Eliminate Noise</h1> */}
     <div>
       <h1 className={title({ color: "pink", size: "lg" })}>Eliminate Noise</h1>
-      {/* <h1 className={title({size: "lg"})}>decisions.</h1> */}
     </div>
     <h1 className={title({ size: "lg" })}>for Clearer Photos</h1>
   </>

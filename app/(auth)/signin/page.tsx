@@ -129,6 +129,7 @@ export default function SignInPage() {
               isInvalid={isInvalidEmail}
               onValueChange={setEmail}
               errorMessage="Invalid email address"
+              value={email}
             />
           </ModalBody>
           <ModalFooter>
@@ -159,6 +160,7 @@ export default function SignInPage() {
               isInvalid={isInvalidEmail}
               onValueChange={setEmail}
               errorMessage="Invalid email address"
+              value={email}
             />
             <Input
               color={themeColor as any}

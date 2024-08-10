@@ -37,7 +37,7 @@ async function AuthState() {
     return (
       <>
         {/* Settings */}
-        <NavbarItem className="hidden lg:flex">
+        {/* <NavbarItem className="hidden lg:flex">
           <Button isIconOnly radius="full" variant="light">
             <Icon
               className="text-default-500"
@@ -45,9 +45,9 @@ async function AuthState() {
               width={24}
             />
           </Button>
-        </NavbarItem>
+        </NavbarItem> */}
         {/* Notifications */}
-        <NavbarItem className="flex">
+        {/* <NavbarItem className="flex">
           <Popover offset={12} placement="bottom-end">
             <PopoverTrigger>
               <Button
@@ -64,7 +64,7 @@ async function AuthState() {
               <NotificationCard className="w-full shadow-none" />
             </PopoverContent>
           </Popover>
-        </NavbarItem>
+        </NavbarItem> */}
         {/* User Menu */}
         <NavbarItem className="px-2">
           <UserDropMenu user={user} />

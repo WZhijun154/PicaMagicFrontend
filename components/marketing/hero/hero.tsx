@@ -30,8 +30,8 @@ export const Hero = () => {
 
   return (
     <section className="flex relative overflow-hidden lg:overflow-visible w-full flex-nowrap justify-between items-center h-[calc(100vh_-_64px)] 2xl:h-[calc(84vh_-_64px)]">
-      <div className="flex relative z-20 flex-col gap-6 w-full lg:w-1/2 xl:mt-10">
-        <div className="w-full flex justify-center md:hidden">
+      <div className="flex relative z-20 flex-col gap-6 w-full lg:w-1/2 xl:mt-10 transition-all">
+        {/* <div className="w-full flex justify-center md:hidden">
           <Chip
             as={NextLink}
             className="bg-default-100/50 hover:bg-default-100 border-default-200/80 dark:border-default-100/80 transition-colors cursor-pointer"
@@ -47,8 +47,8 @@ export const Hero = () => {
               🚀
             </span>
           </Chip>
-        </div>
-        <div className="text-center leading-8 md:leading-10 md:text-left">
+        </div> */}
+        <div className="text-center leading-8 md:leading-10 md:text-left transition-all">
           <div className="inline-block">
             <h1 className={title()}>Create&nbsp;</h1>
             <h1 className={title({ color: "violet" })}>Stunning&nbsp;</h1>

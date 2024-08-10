@@ -18,48 +18,74 @@ import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: {
-    default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`,
+    default: "PictaMagic - AI Photo Editing Made Easy",
+    template: `%s | PictaMagic`,
   },
-  description: siteConfig.description,
+  description:
+    "Transform your photos effortlessly with PictaMagic's AI-powered tools. Enhance resolution, remove backgrounds, colorize, denoise, and deblur your images with just a few clicks.",
   keywords: [
-    "React",
-    "Next.js",
-    "Tailwind CSS",
-    "NextUI",
-    "React Aria",
-    "Server Components",
-    "React Components",
-    "UI Components",
-    "UI Kit",
-    "UI Library",
-    "UI Framework",
-    "UI Design System",
+    "AI Photo Editing",
+    "Super Resolution",
+    "Background Removal",
+    "AI Colorization",
+    "Denoising",
+    "Deblurring",
+    "Photo Enhancement",
+    "AI Tools",
+    "Image Editing",
+    "Photography",
+    "Photo Editor",
+    "PictaMagic",
   ],
-  // themeColor: [
-  //   { media: "(prefers-color-scheme: light)", color: "white" },
-  //   { media: "(prefers-color-scheme: dark)", color: "black" },
-  // ],
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-32x32.png",
-    apple: "/apple-touch-icon.png",
-  },
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
+  // icons: {
+  //   icon: "/favicon.ico",
+  //   shortcut: "/favicon-32x32.png",
+  //   apple: "/apple-touch-icon.png",
+  // },
   manifest: "/manifest.json",
-  twitter: siteConfig.twitter,
-  openGraph: siteConfig.openGraph,
+  twitter: {
+    card: "summary_large_image",
+    title: "PictaMagic - AI Photo Editing Made Easy",
+    description:
+      "Edit your photos with AI-powered tools for super resolution, background removal, colorization, and more.",
+    site: "@PictaMagic",
+    creator: "@zhijun.wang",
+    // image: "/og-image.png",
+  },
+  openGraph: {
+    type: "website",
+    url: "https://pictamagic.com",
+    title: "PictaMagic - AI Photo Editing Made Easy",
+    description:
+      "Transform your photos effortlessly with PictaMagic's AI-powered tools.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "PictaMagic - AI Photo Editing Made Easy",
+      },
+    ],
+  },
   authors: [
     {
-      name: "zhijun.wang",
-      url: "https://jrgarciadev.com",
+      name: "Zhijun Wang",
+      url: "https://pictamagic.com",
     },
   ],
-  creator: "zhijun.wang",
+  creator: "Zhijun Wang",
   alternates: {
-    canonical: "https://nextui.org",
+    canonical: "https://pictamagic.com",
     types: {
       "application/rss+xml": [
-        { url: "https://nextui.org/feed.xml", title: "NextUI RSS Feed" },
+        {
+          url: "https://pictamagic.com/feed.xml",
+          title: "PictaMagic RSS Feed",
+        },
       ],
     },
   },
