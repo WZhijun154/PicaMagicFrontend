@@ -1,11 +1,11 @@
 "use client";
 
-import {Icon} from "@iconify/react/dist/offline";
+import { Icon } from "@iconify/react/dist/offline";
 import arrowRightIcon from "@iconify/icons-solar/arrow-right-linear";
-import {usePathname} from "next/navigation";
-import {useEffect} from "react";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
-import {trackEvent} from "@/utils/va";
+import { trackEvent } from "@/utils/va";
 import emitter from "@/libs/emitter";
 
 const hideOnPaths = ["examples"];
@@ -69,30 +69,31 @@ export const ProBanner = () => {
         />
       </div>
       <div className="flex w-full items-center justify-between md:justify-center gap-x-3">
-        <a
+        {/* <a
           className="text-small flex items-end sm:text-[0.93rem] text-foreground hover:opacity-80 transition-opacity"
           href="https://nextui.pro?utm_source=nextui.org&utm_medium=top-banner"
           rel="noopener noreferrer"
           target="_blank"
           onClick={handleClick}
+        > */}
+        <span aria-label="rocket" className="hidden md:block" role="img">
+          🚧
+        </span>
+        <span
+          className="inline-flex md:ml-1 animate-text-gradient font-medium bg-clip-text text-transparent bg-[linear-gradient(90deg,#D6009A_0%,#8a56cc_50%,#D6009A_100%)] dark:bg-[linear-gradient(90deg,#FFEBF9_0%,#8a56cc_50%,#FFEBF9_100%)]"
+          style={{
+            fontSize: "inherit",
+            backgroundSize: "200%",
+            backgroundClip: "text",
+            WebkitBackgroundClip: "text",
+            color: "transparent",
+          }}
         >
-          <span aria-label="rocket" className="hidden md:block" role="img">
-            🚀
-          </span>
-          <span
-            className="inline-flex md:ml-1 animate-text-gradient font-medium bg-clip-text text-transparent bg-[linear-gradient(90deg,#D6009A_0%,#8a56cc_50%,#D6009A_100%)] dark:bg-[linear-gradient(90deg,#FFEBF9_0%,#8a56cc_50%,#FFEBF9_100%)]"
-            style={{
-              fontSize: "inherit",
-              backgroundSize: "200%",
-              backgroundClip: "text",
-              WebkitBackgroundClip: "text",
-              color: "transparent",
-            }}
-          >
-            Ship faster with beautiful components
-          </span>
-        </a>
-        <a
+          Thank you for your patience! Our AI feature is still under development
+          and will be available soon.
+        </span>
+        {/* </a> */}
+        {/* <a
           className="flex group min-w-[120px] items-center font-semibold text-foreground shadow-sm gap-1.5 relative overflow-hidden rounded-full p-[1px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           href="https://nextui.pro?utm_source=nextui.org&utm_medium=top-banner"
           rel="noopener noreferrer"
@@ -108,7 +109,7 @@ export const ProBanner = () => {
               width={16}
             />
           </div>
-        </a>
+        </a> */}
       </div>
     </div>
   );
