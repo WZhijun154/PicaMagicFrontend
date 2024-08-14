@@ -11,6 +11,11 @@
       "name": "Next.js: debug client-side",
       "type": "chrome",
       "request": "launch",
+      "runtimeExecutable": "/usr/bin/google-chrome", // Path to your Chrome executable
+      "runtimeArgs": [
+        "--disable-web-security",
+        "--user-data-dir=/tmp/chrome_dev"
+      ],
       "url": "http://localhost:3000"
     },
     {
