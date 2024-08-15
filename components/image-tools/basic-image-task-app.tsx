@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, use } from "react";
 import { FileDropArea } from "./file-drop-area";
 import { uploadToFastAPI } from "@/utils/upload";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -22,19 +22,20 @@ import {
   getSignedDownloadUrl,
 } from "@/plugins/wasabi/utils";
 import AwsS3, { type AwsBody } from "@uppy/aws-s3";
-// import { useRef } from "react";
-// import { createClient } from "@/plugins/supabase/client";
-// import { uploadFileToSupabase } from "@/utils/upload";
 
 import Uppy from "@uppy/core";
-// import Tus from "@uppy/tus";
 import toast from "react-hot-toast";
 import XHRUpload from "@uppy/xhr-upload";
-import { runWithConcurrencyLimit, TaskPool } from "@/utils/task-pool";
-import { useIsMounted } from "@/hooks/use-is-mounted";
-
-import { sleep } from "@/utils/task-pool";
+import { TaskPool } from "@/utils/task-pool";
 import { upscaleRealEsrgan } from "@/plugins/replicate/prediction";
+import {
+  getWatermarkedAndProcessedImageBuffer,
+  upscaleImage,
+} from "@/plugins/octoai/prediction";
+import { getUrlFromBase64 } from "@/utils/image";
+
+import { useAddFile, useRemoveFile, useSetAttributes } from "@/utils/file";
+import { add } from "lodash";
 
 let uploadTaskPool = new TaskPool(2);
 let processTaskPool = new TaskPool(2);
@@ -107,14 +108,6 @@ function ControlPanel({ color = "primary" }: ControlPanelProps) {
   );
 }
 
-const color2background = {
-  primary: "gradients/image_tool_full_bg_primary.svg",
-  warning: "gradients/image_tool_full_bg_warning.svg",
-  success: "gradients/image_tool_full_bg_success.svg",
-  secondary: "gradients/image_tool_full_bg_secondary.svg",
-  danger: "gradients/image_tool_full_bg_danger.svg",
-};
-
 interface BasicImageTaskAppProps {
   filesAtom: any;
   hero: React.ReactNode;
@@ -132,319 +125,57 @@ export default function BasicImageTaskApp({
 }: BasicImageTaskAppProps) {
   const files = useAtomValue(filesAtom) as BasicImageTaskInfo[];
   const setFiles = useSetAtom(filesAtom);
+
+  const addFile = useAddFile(filesAtom);
+  const removeFile = useRemoveFile(filesAtom);
+  const setAttributes = useSetAttributes(filesAtom);
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [currentModalFile, setCurrentModalFile] =
     useState<BasicImageTaskInfo | null>(null);
 
-  useEffect(() => {
-    files.forEach((file) => {
-      if (file.status === BasicImageTaskStatus.READY && file.taskMethod) {
-        processTaskPool.addTask(async () => {
-          await file.taskMethod();
-        });
-      }
-    });
-  }, [files]);
-
-  const setTaskStatus = (
-    file: BasicImageTaskInfo,
-    status: BasicImageTaskStatus
-  ) => {
-    setFiles((prev: BasicImageTaskInfo[]) =>
-      prev.map((prevFile: BasicImageTaskInfo) =>
-        prevFile.fileName === file.fileName
-          ? { ...prevFile, status: status }
-          : prevFile
-      )
-    );
-  };
-
-  const setProcessedUrl = (file: BasicImageTaskInfo, url: string) => {
-    setFiles((prev: BasicImageTaskInfo[]) =>
-      prev.map((prevFile: BasicImageTaskInfo) =>
-        prevFile.fileName === file.fileName
-          ? { ...prevFile, processedUrl: url }
-          : prevFile
-      )
-    );
-  };
-
-  const download = (file: BasicImageTaskInfo) => {
-    window.location.href =
-      backendBaseUrl + "/download?path=" + file.processedUrl;
-    return;
-  };
-
   async function processTask(file: BasicImageTaskInfo) {
-    setTaskStatus(file, BasicImageTaskStatus.STARTED);
-    setTaskStatus(file, BasicImageTaskStatus.IN_PROGRESS);
-    // toast.loading("Processing image");
-    // return;
+    // avoid stale closure by take file as argument
     const imageUrl = file.fileUrl;
-    // TODO: generalize this
-    // const response = await fetch(`${backendBaseUrl}/${backendMethod}`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     image_url: imageUrl,
-    //     file_name: file.fileName,
-    //   }),
-    //   redirect: "follow",
-    //   credentials: "include", // Ensure cookies are included
-    // });
-    await upscaleRealEsrgan({
-      image: imageUrl,
-      scale: 2,
-      faceEnhance: false,
+
+    const { data: submitData, error: submitError } = await upscaleImage({
+      model: "RealESRGAN_x4plus_anime_6B",
+      scale: 4,
+      inputImage: file.fileUrlOnClient as string,
+      outputImageEncoding: "png",
     });
 
-    // if (!response.ok) {
-    //   const errorMessage = "Failed to remove background";
-    //   setTaskStatus(file, BasicImageTaskStatus.FAILED);
-    //   return;
-    // }
+    if (submitError) {
+      toast.error("Failed to connect to the server");
+      setAttributes(file, { status: BasicImageTaskStatus.FAILED });
+      return;
+    }
 
-    // setTaskStatus(file, BasicImageTaskStatus.SUCCEEDED);
+    const taskId = submitData.task_id;
 
-    // const result = await response.json();
-    // const output = result.output;
-    // setProcessedUrl(file, output);
-    // console.log(file);
+    const {
+      data: watermarkedAndProcessedImageData,
+      error: watermarkedAndProcessedImageError,
+    } = await getWatermarkedAndProcessedImageBuffer(taskId);
+
+    if (watermarkedAndProcessedImageError) {
+      toast.error("Failed to connect to the server");
+      setAttributes(file, { status: BasicImageTaskStatus.FAILED });
+      return;
+    }
+
+    const base64Image = Buffer.from(
+      watermarkedAndProcessedImageData.buffer
+    ).toString("base64");
+
+    const base64Url = getUrlFromBase64(base64Image);
+
+    setAttributes(file, { processedUrl: base64Url });
+    setAttributes(file, { status: BasicImageTaskStatus.SUCCEEDED });
   }
 
   const onDrop = async (_files: File[]) => {
-    // files.forEach(async (file) => {
-
-    // if (error || !data.session) {
-    //   // TODO: Handle error
-    //   toast.error("You need to login to upload images");
-    //   return;
-    // }
-    // TODO: Failed to use uppy
-    // const uppy = new Uppy({ autoProceed: true });
-    // uppy.use(Tus, {
-    //   endpoint: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/upload/resumable`,
-    //   headers: {
-    //     authorization: `Bearer ${data!.session!.access_token}`,
-    //     "x-upsert": "true", // optionally set upsert to true to overwrite existing files
-    //   },
-    //   uploadDataDuringCreation: true,
-    //   chunkSize: 1024 * 1024,
-
-    //   allowedMetaFields: [
-    //     "bucketName",
-    //     "objectName",
-    //     "contentType",
-    //     "cacheControl",
-    //   ],
-    //   limit: 3,
-    //   removeFingerprintOnSuccess: true,
-    // });
-
-    // uppy.on("file-added", (file) => {
-    //   setFiles((prev: BasicImageTaskInfo[]) => {
-    //     const newFile = {
-    //       fileName: file.name,
-    //       fileUrl: "",
-    //       progress: 0,
-    //       deleteMethod: () => {
-    //         uppy.removeFile(file.id);
-    //         setFiles((prev: BasicImageTaskInfo[]) =>
-    //           prev.filter(
-    //             (prevFile: BasicImageTaskInfo) =>
-    //               prevFile.fileName !== file.name
-    //           )
-    //         );
-    //       },
-    //       taskMethod: () => {},
-    //       status: BasicImageTaskStatus.NOT_READY,
-    //       processedUrl: "",
-    //     };
-    //     return [...prev, newFile];
-    //   });
-
-    //   const supabaseMetadata = {
-    //     bucketName: "test",
-    //     objectName: file.name,
-    //     contentType: file.type,
-    //   };
-
-    //   file.meta = {
-    //     ...file.meta,
-    //     ...supabaseMetadata,
-    //   };
-    // });
-
-    // uppy.on("upload-success", (file, response) => {
-    //   setFiles((prev: BasicImageTaskInfo[]) =>
-    //     prev.map((prevFile: BasicImageTaskInfo) =>
-    //       prevFile.fileName === file?.name
-    //         ? {
-    //             ...prevFile,
-    //             fileUrl: response.uploadURL,
-    //             status: BasicImageTaskStatus.READY,
-    //           }
-    //         : prevFile
-    //     )
-    //   );
-    //   setFiles((prev: BasicImageTaskInfo[]) =>
-    //     prev.map((prevFile: BasicImageTaskInfo) =>
-    //       prevFile.fileName === file?.name
-    //         ? { ...prevFile, taskMethod: () => processTask(prevFile) }
-    //         : prevFile
-    //     )
-    //   );
-    // });
-
-    // uppy.on("upload-error", (file, error) => {
-    //   toast.error("Failed to upload file");
-    //   setFiles((prev: BasicImageTaskInfo[]) =>
-    //     prev.filter(
-    //       (prevFile: { fileName: string }) => prevFile.fileName !== file!.name
-    //     )
-    //   );
-    // });
-
-    // use wasabi
-    // let uploadTasks: any[] = [];
     for (const _file of _files) {
-      // TODO: upload to fastapi
-      // const uploadMethodProps = {
-      //   file: file,
-      //   onStart: () => {
-      //     const deleteMethod = () => {
-      //       cancel && cancel();
-      //       setFiles((prev: BasicImageTaskInfo[]) =>
-      //         prev.filter(
-      //           (prevFile: BasicImageTaskInfo) =>
-      //             prevFile.fileName !== file.name
-      //         )
-      //       );
-      //     };
-      //     setFiles((prev: BasicImageTaskInfo[]) => {
-      //       const newFile = {
-      //         fileName: file.name,
-      //         fileUrl: "",
-      //         progress: 0,
-      //         deleteMethod,
-      //         taskMethod: () => {},
-      //         status: BasicImageTaskStatus.NOT_READY,
-      //         processedUrl: "",
-      //       };
-      //       return [...prev, newFile];
-      //     });
-      //     const reader = new FileReader();
-      //     reader.onload = () => {
-      //       const fileUrlOnClient = reader.result as string;
-      //       const image = new window.Image();
-      //       image.onload = () => {
-      //         setFiles((prev: BasicImageTaskInfo[]) => {
-      //           return prev.map((prevFile: BasicImageTaskInfo) =>
-      //             prevFile.fileName === file.name
-      //               ? {
-      //                   ...prevFile,
-      //                   fileUrlOnClient: reader.result as string,
-      //                   width: image.width,
-      //                   height: image.height,
-      //                 }
-      //               : prevFile
-      //           );
-      //         });
-      //       };
-      //       image.src = fileUrlOnClient;
-      //     };
-      //     reader.readAsDataURL(file);
-      //   },
-      //   onProgress: (progress: number) => {
-      //     setFiles((prev: BasicImageTaskInfo[]) =>
-      //       prev.map((prevFile: BasicImageTaskInfo) =>
-      //         prevFile.fileName === file.name
-      //           ? { ...prevFile, progress }
-      //           : prevFile
-      //       )
-      //     );
-      //   },
-      //   onSuccess: (imageUrl: string) => {
-      //     setFiles((prev: BasicImageTaskInfo[]) =>
-      //       prev.map((prevFile: BasicImageTaskInfo) =>
-      //         prevFile.fileName === file.name
-      //           ? {
-      //               ...prevFile,
-      //               progress: 100,
-      //               fileUrl: imageUrl,
-      //               // at this point, the fileUrl still not be set, so set it after this step
-      //               status: BasicImageTaskStatus.READY,
-      //             }
-      //           : prevFile
-      //       )
-      //     );
-      //     setFiles((prev: BasicImageTaskInfo[]) =>
-      //       prev.map((prevFile: BasicImageTaskInfo) =>
-      //         prevFile.fileName === file.name
-      //           ? { ...prevFile, taskMethod: () => processTask(prevFile) }
-      //           : prevFile
-      //       )
-      //     );
-      //     cancel = () => {};
-      //   },
-      //   onError: (error: any) => {
-      //     setFiles((prev: BasicImageTaskInfo[]) =>
-      //       prev.filter(
-      //         (prevFile: { fileName: string }) =>
-      //           prevFile.fileName !== file.name
-      //       )
-      //     );
-      //     showErrorNotification("Failed to upload file");
-      //     console.log(error);
-      //   },
-      // };
-      // const result = uploadToFastAPI(uploadMethodProps);
-      // const promise = result.promise;
-      // let cancel = result.cancel;
-      // try {
-      //   await promise;
-      // } catch (error) {
-      //   console.log(error);
-      // }
-      // TODO: uppy
-      // uppy.on("progress", (progress) => {
-      //   setFiles((prev: BasicImageTaskInfo[]) =>
-      //     prev.map((prevFile: BasicImageTaskInfo) =>
-      //       prevFile.fileName === file.name
-      //         ? { ...prevFile, progress: progress }
-      //         : prevFile
-      //     )
-      //   );
-      // });
-      // uppy.addFile({
-      //   name: file.name,
-      //   type: file.type,
-      //   data: file,
-      // });
-      // TODO: supabase upload
-      // const supabase = createClient();
-      // const { data, error } = await supabase.storage
-      //   .from("test")
-      //   .createSignedUploadUrl(file.name);
-      // if (error) {
-      //   continue;
-      // }
-      // await uploadFileToSupabase({
-      //   preSignedUrl: data!.signedUrl,
-      //   file: file,
-      //   onStart: () => {},
-      //   onError: () => {},
-      //   onProgress: () => {},
-      //   onSuccess: () => {},
-      // });
-      // TODO: upload to supabase
-      // const { data: uploadData, error: uploadError } = await supabase.storage
-      //   .from("test")
-      //   .uploadToSignedUrl(file.name, data!.token, file);
-      // console.log(uploadData, uploadError);
-
       const presignedUrl = await getPresignedUploadUrl(_file.name!, _file.type);
 
       const uppy = new Uppy({
@@ -456,64 +187,59 @@ export default function BasicImageTaskApp({
         endpoint: presignedUrl,
       });
 
-      uppy.on("file-added", (file) => {
-        setFiles((prev: BasicImageTaskInfo[]) => {
-          const newFile = {
-            fileName: file.name,
-            fileUrl: "",
-            progress: 0,
-            deleteMethod: () => {
-              uppy.removeFile(file.id);
-              setFiles((prev: BasicImageTaskInfo[]) =>
-                prev.filter(
-                  (prevFile: BasicImageTaskInfo) =>
-                    prevFile.fileName !== file.name
-                )
-              );
-            },
-            taskMethod: () => {},
-            status: BasicImageTaskStatus.NOT_READY,
-            processedUrl: "",
+      uppy.on("file-added", (file: any) => {
+        const fileName = file.name;
+        const fileUrl = "";
+        const progress = 0;
+        const deleteMethod = () => {
+          uppy.removeFile(file.id);
+          removeFile(_file);
+        };
+        const processedUrl = "";
+        const status = BasicImageTaskStatus.NOT_READY;
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const fileUrlOnClient = reader.result as string;
+          const image = new window.Image();
+          image.src = fileUrlOnClient;
+          image.onload = () => {
+            const width = image.width;
+            const height = image.height;
+            const newFile: BasicImageTaskInfo = {
+              fileName,
+              fileUrl,
+              progress,
+              deleteMethod,
+              processedUrl,
+              status,
+              width,
+              height,
+              fileUrlOnClient,
+              taskMethod: null,
+            };
+            addFile(newFile);
           };
-          return [...prev, newFile];
+        };
+        reader.readAsDataURL(_file);
+      });
+
+      uppy.on("progress", (progress: any) => {
+        setAttributes(_file, { progress: progress });
+      });
+
+      uppy.on("complete", async (result: any) => {
+        const signedDownloadUrl = await getSignedDownloadUrl(_file!.name);
+
+        setAttributes(_file, {
+          fileUrl: signedDownloadUrl,
+          status: BasicImageTaskStatus.READY,
         });
       });
 
-      uppy.on("progress", (progress) => {
-        setFiles((prev: BasicImageTaskInfo[]) =>
-          prev.map((prevFile: BasicImageTaskInfo) =>
-            prevFile.fileName === _file!.name
-              ? { ...prevFile, progress }
-              : prevFile
-          )
-        );
-      });
-
-      uppy.on("complete", async (result) => {
-        // Step 1: Retrieve the signed download URL asynchronously
-        const signedDownloadUrl = await getSignedDownloadUrl(_file!.name);
-
-        // Step 2: Update the files state with the new URL
-        setFiles((prev: BasicImageTaskInfo[]) =>
-          prev.map((prevFile: BasicImageTaskInfo) =>
-            prevFile.fileName === _file!.name
-              ? {
-                  ...prevFile,
-                  fileUrl: signedDownloadUrl,
-                  status: BasicImageTaskStatus.READY,
-                }
-              : prevFile
-          )
-        );
-
-        // Step 3: Update the files state to set the taskMethod
-        setFiles((prev: BasicImageTaskInfo[]) =>
-          prev.map((prevFile: BasicImageTaskInfo) =>
-            prevFile.fileName === _file!.name
-              ? { ...prevFile, taskMethod: () => processTask(prevFile) }
-              : prevFile
-          )
-        );
+      uppy.on("upload-error", (file, error) => {
+        toast.error("Failed to upload file");
+        setAttributes(_file, { status: BasicImageTaskStatus.FAILED });
       });
 
       uppy.addFile({
@@ -522,24 +248,29 @@ export default function BasicImageTaskApp({
         data: _file,
       });
 
-      // uploadTasks.push(() => uppy.upload());
       uploadTaskPool.addTask(async () => {
         await uppy.upload();
-        // should wait for atom update
-        // trigger a state update
-
-        // add process task to the pool
-        // find the task based on the file name
-        // const imageTaskInfo = files.find(
-        //   (file) => file.fileName === _file.name
-        // );
-        // if (imageTaskInfo) {
-        //   processTaskPool.addTask(async () => {
-        //     await processTask(imageTaskInfo);
-        //   });
-        // }
       });
     }
+  };
+
+  useEffect(() => {
+    files.forEach((file) => {
+      if (file.status === BasicImageTaskStatus.READY) {
+        const task = async () => await processTask(file);
+        setAttributes(file, {
+          taskMethod: task,
+        });
+        setAttributes(file, { status: BasicImageTaskStatus.IN_PROGRESS });
+        processTaskPool.addTask(task);
+      }
+    });
+  }, [files]);
+
+  const download = (file: BasicImageTaskInfo) => {
+    window.location.href =
+      backendBaseUrl + "/download?path=" + file.processedUrl;
+    return;
   };
 
   const openImageCompareModal = (file: BasicImageTaskInfo) => {
@@ -554,11 +285,7 @@ export default function BasicImageTaskApp({
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         leftImage={currentModalFile?.fileUrlOnClient as string}
-        rightImage={
-          (backendBaseUrl +
-            "/download?path=" +
-            currentModalFile?.processedUrl) as string
-        }
+        rightImage={currentModalFile?.processedUrl as string}
       />
 
       <div className="flex flex-col gap-12 items-center mt-[96px] mb-24">

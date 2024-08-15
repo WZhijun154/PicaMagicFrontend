@@ -22,6 +22,10 @@ const nextConfig = {
       "nextui.org",
     ],
   },
+  serverComponentsExternalPackages: [
+    "@aws-sdk/client-s3",
+    "@aws-sdk/s3-request-presigner",
+  ],
 };
 
 // module.exports = withContentlayer(nextConfig);
