@@ -25,11 +25,13 @@ import { useUser } from "@/hooks/use-user";
 import { AuthStatus } from "@/types/auth";
 import { useDisclosure } from "@nextui-org/react";
 import { sendResetPasswordEmail } from "@/plugins/supabase/auth";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import { useDictionary } from "@/components/dictionary-provider";
 
 export default function SignInPage() {
   const themeColor = useCurrentThemeColor({});
   const [isVisible, setIsVisible] = React.useState(false);
+  const dictionary = useDictionary();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -73,17 +75,17 @@ export default function SignInPage() {
         const { authStatus } = await signIn(formData);
         if (authStatus !== AuthStatus.SUCCESS) {
           if (authStatus === AuthStatus.INVALID_LOGIN_CREDENTIALS) {
-            toast.error("Invalid email or password");
+            toast.error(dictionary.auth.invalidLoginCredentials);
           } else {
-            toast.error("Something went wrong, please try again later");
+            toast.error(dictionary.somethingWentWrong);
           }
           return;
         }
       } catch (error) {
-        toast.error("Something went wrong, please try again later");
+        toast.error(dictionary.somethingWentWrong);
         return;
       }
-      toast.success("Signed in successfully");
+      toast.success(dictionary.auth.signInSuccess);
       router.push("/");
     });
   };
@@ -100,10 +102,10 @@ export default function SignInPage() {
     setSendEmailTransition(async () => {
       const { authStatus } = await sendResetPasswordEmail(email);
       if (authStatus !== AuthStatus.SUCCESS) {
-        toast.error("Failed to send email, please try again later");
+        toast.error(dictionary.failedToSendEmail);
         return;
       }
-      toast.success("Email sent successfully");
+      toast.success(dictionary.emailSent);
       onClose();
     });
   };
@@ -116,42 +118,41 @@ export default function SignInPage() {
           <ModalHeader>Forgot Password</ModalHeader>
           <ModalBody>
             <p className="text-default-500">
-              Enter your email address and we'll send you a link to reset your
-              password.
+              {dictionary.auth.resetPasswordGuide}
             </p>
             <Input
-              label="Email Address"
+              label={dictionary.auth.emailAddress}
               name="email"
-              placeholder={emailPlaceHolder}
+              placeholder={dictionary.auth.emailPlaceholder}
               type="email"
               variant="bordered"
               color={themeColor as any}
               isInvalid={isInvalidEmail}
               onValueChange={setEmail}
-              errorMessage="Invalid email address"
+              errorMessage={dictionary.auth.invalidEmailAddress}
               value={email}
             />
           </ModalBody>
           <ModalFooter>
             <Button color={themeColor as any} onClick={onClose} variant="light">
-              Cancel
+              {dictionary.cancel}
             </Button>
             <Button
               color={themeColor as any}
               onClick={handleSendPasswordResetEmail}
               isLoading={isSendingEmailPending}
             >
-              Send
+              {dictionary.send}
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
       <div className="flex flex-row items-center justify-center mt-48">
         <Card className="animate-appearance-in flex w-full max-w-sm flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small">
-          <p className="pb-2 text-xl font-medium">Sign In</p>
+          <p className="pb-2 text-xl font-medium">{dictionary.auth.signIn}</p>
           <form className="flex flex-col gap-3">
             <Input
-              label="Email Address"
+              label={dictionary.auth.emailAddress}
               name="email"
               placeholder={emailPlaceHolder}
               type="email"
@@ -159,7 +160,7 @@ export default function SignInPage() {
               color={themeColor as any}
               isInvalid={isInvalidEmail}
               onValueChange={setEmail}
-              errorMessage="Invalid email address"
+              errorMessage={dictionary.auth.invalidEmailAddress}
               value={email}
             />
             <Input
@@ -179,14 +180,14 @@ export default function SignInPage() {
                   )}
                 </button>
               }
-              label="Password"
+              label={dictionary.auth.password}
               name="password"
-              placeholder={passwordPlaceHolder}
+              placeholder={dictionary.auth.passwordPlaceholder}
               type={isVisible ? "text" : "password"}
               variant="bordered"
               onValueChange={setPassword}
               isInvalid={isInvalidPassword}
-              errorMessage="Password must be at least 6 characters long"
+              errorMessage={dictionary.auth.passwordNotLongEnough}
             />
             <div className="flex items-center justify-between px-1 py-2">
               <Checkbox
@@ -195,10 +196,12 @@ export default function SignInPage() {
                 color={themeColor as any}
                 defaultSelected
               >
-                Remember me
+                {dictionary.auth.rememberMe}
               </Checkbox>
               <button type="button" onClick={onOpen}>
-                <p className="text-default-500 text-sm">Forgot password?</p>
+                <p className="text-default-500 text-sm">
+                  {dictionary.auth.forgotPasswordQuery}
+                </p>
               </button>
             </div>
             <Button
@@ -207,7 +210,7 @@ export default function SignInPage() {
               formAction={handleSubmit}
               isLoading={isSubmitPending}
             >
-              Sign in
+              {dictionary.auth.signIn}
             </Button>
           </form>
           {/* <div className="flex items-center gap-4 py-2">
@@ -236,9 +239,9 @@ export default function SignInPage() {
             </Button>
           </div> */}
           <p className="text-center text-small">
-            Need to create an account?&nbsp;
+            {dictionary.auth.createAccountQuery}&nbsp;
             <Link href="/signup" size="sm" color={themeColor as any}>
-              Sign Up
+              {dictionary.auth.signUp}
             </Link>
           </p>
         </Card>

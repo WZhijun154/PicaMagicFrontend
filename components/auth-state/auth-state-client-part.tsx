@@ -24,10 +24,12 @@ import {
 import { useDisclosure } from "@nextui-org/react";
 import { AuthStatus } from "@/types/auth";
 import toast from "react-hot-toast";
+import { useDictionary } from "../dictionary-provider";
 
 export const SignInButton = () => {
   const router = useRouter();
   const color = useCurrentThemeColor({});
+  const dictionary = useDictionary();
 
   const handleSignIn = () => {
     router.push("/signin");
@@ -40,7 +42,7 @@ export const SignInButton = () => {
       color={color as any}
       onClick={handleSignIn}
     >
-      Sign in
+      {dictionary.auth.signIn}
     </Button>
   );
 };
@@ -48,6 +50,7 @@ export const SignInButton = () => {
 export const SignUpButton = () => {
   const router = useRouter();
   const color = useCurrentThemeColor({});
+  const dictionary = useDictionary();
 
   const handleSignUp = () => {
     router.push("/signup");
@@ -60,7 +63,7 @@ export const SignUpButton = () => {
       color={color as any}
       onClick={handleSignUp}
     >
-      Sign Up
+      {dictionary.auth.signUp}
     </Button>
   );
 };
@@ -81,6 +84,8 @@ export const NotificationBadge = () => {
 
 export const AvatarBadge = () => {
   const currentThemeColor = useCurrentThemeColor({});
+  const dictionary = useDictionary();
+
   return (
     <Badge
       color={currentThemeColor as any}
@@ -88,7 +93,7 @@ export const AvatarBadge = () => {
       placement="bottom-right"
       shape="circle"
     >
-      <Avatar size="sm" name="Me" isBordered />
+      <Avatar size="sm" name={dictionary.auth.me} isBordered />
     </Badge>
   );
 };
@@ -97,6 +102,7 @@ export const UserDropMenu = ({ user }: { user: User | null }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const currentThemeColor = useCurrentThemeColor({});
   const router = useRouter();
+  const dictionary = useDictionary();
   // const { userSignOut } = useUser();
   const [isPending, startTransition] = useTransition();
   const submitSignOut = () => {
@@ -104,14 +110,14 @@ export const UserDropMenu = ({ user }: { user: User | null }) => {
       try {
         const authStatus = await signOut();
         if (authStatus !== AuthStatus.SUCCESS) {
-          toast.error("Something went wrong. Please try again.");
+          toast.error(dictionary.somethingWentWrong);
           return;
         }
-        toast.success("Signed out successfully");
+        toast.success(dictionary.auth.signOutSuccess);
         router.push("/");
         return;
       } catch (error) {
-        toast.error("Something went wrong. Please try again.");
+        toast.error(dictionary.somethingWentWrong);
         return;
       }
     });
@@ -122,10 +128,10 @@ export const UserDropMenu = ({ user }: { user: User | null }) => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader>Sign Out</ModalHeader>
+              <ModalHeader>{dictionary.auth.signOut}</ModalHeader>
               <ModalBody className="text-center">
                 <p className="text-default-500">
-                  Are you sure you want to sign out?{" "}
+                  {dictionary.auth.signOutConfirm}
                 </p>
               </ModalBody>
               <ModalFooter>
@@ -135,7 +141,7 @@ export const UserDropMenu = ({ user }: { user: User | null }) => {
                   onPress={onClose}
                   // fullWidth
                 >
-                  Cancel
+                  {dictionary.cancel}
                 </Button>
                 <Button
                   color={currentThemeColor as any}
@@ -143,7 +149,7 @@ export const UserDropMenu = ({ user }: { user: User | null }) => {
                   // fullWidth
                   isLoading={isPending}
                 >
-                  Sign Out
+                  {dictionary.auth.signOut}
                 </Button>
               </ModalFooter>
             </>
@@ -158,7 +164,7 @@ export const UserDropMenu = ({ user }: { user: User | null }) => {
         </DropdownTrigger>
         <DropdownMenu aria-label="Profile Actions" variant="flat">
           <DropdownItem key="profile" className="h-14 gap-2">
-            <p className="font-semibold">Signed in as</p>
+            <p className="font-semibold">{dictionary.auth.signInAs}</p>
             <p className="">{user?.email}</p>
           </DropdownItem>
           {/* <DropdownItem key="settings">My Settings</DropdownItem> */}
@@ -172,7 +178,7 @@ export const UserDropMenu = ({ user }: { user: User | null }) => {
             color={currentThemeColor as any}
             onClick={onOpen}
           >
-            Sign Out
+            {dictionary.auth.signOut}
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>

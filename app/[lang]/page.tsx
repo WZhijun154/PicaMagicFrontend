@@ -18,21 +18,23 @@ import landingContent from "@/content/landing";
 import { getAllSponsors } from "@/utils/get-all-sponsors";
 
 import { Sponsors } from "@/components/marketing/sponsors";
+import { getDictionary } from "@/get-dictionary";
+import { Locale } from "@/i18n-config";
+// async function getData() {
+//   try {
+//     const sponsors = await getAllSponsors();
 
-async function getData() {
-  try {
-    const sponsors = await getAllSponsors();
+//     return {
+//       sponsors,
+//     };
+//   } catch (error) {
+//     throw new Error("Failed to fetch data");
+//   }
+// }
 
-    return {
-      sponsors,
-    };
-  } catch (error) {
-    throw new Error("Failed to fetch data");
-  }
-}
-
-export default function Home() {
+export default async function Home({ params }: { params: { lang: Locale } }) {
   // const data = await getData();
+  const dictionary = await getDictionary(params.lang);
 
   return (
     <main className="container mx-auto max-w-7xl px-6 flex-grow">
@@ -41,7 +43,7 @@ export default function Home() {
         <FeaturesGrid features={landingContent.topFeatures} />
         {/* <Sponsors /> */}
         <UpscalerIntro size="lg" />
-        <BgRemoverIntro size="lg" isExampleFront />
+        <BgRemoverIntro size="lg" isExampleFront dictionary={dictionary} />
         <ColorizerIntro size="lg" />
         <DenoiserIntro size="lg" isExampleFront />
         <DeblurerIntro size="lg" />

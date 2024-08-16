@@ -4,7 +4,6 @@ import { Metadata } from "next";
 import { clsx } from "@nextui-org/shared-utils";
 
 import { Providers } from "./providers";
-import { StrictMode } from "react";
 import { Cmdk } from "@/components/cmdk";
 import manifest from "@/config/routes.json";
 import { siteConfig } from "@/config/site";
@@ -15,6 +14,8 @@ import { ProBanner } from "@/components/pro-banner";
 import { Spacer } from "@nextui-org/spacer";
 import { AuthState } from "@/components/auth-state/auth-state";
 import { Toaster } from "react-hot-toast";
+import { i18n, type Locale } from "@/i18n-config";
+import { getDictionary } from "@/get-dictionary";
 
 export const metadata: Metadata = {
   title: {
@@ -93,13 +94,21 @@ export const metadata: Metadata = {
     "viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0",
 };
 
-export default function RootLayout({
+export async function generateStaticParams() {
+  return i18n.locales.map((locale) => ({ lang: locale }));
+}
+
+export default async function RootLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: { lang: Locale };
 }) {
+  const dictionary = await getDictionary(params.lang);
+
   return (
-    <html suppressHydrationWarning dir="ltr" lang="en">
+    <html suppressHydrationWarning dir="ltr" lang={params.lang}>
       <head />
       <body
         className={clsx(
@@ -107,7 +116,10 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
+        <Providers
+          themeProps={{ attribute: "class", defaultTheme: "light" }}
+          dictionary={dictionary}
+        >
           <div className="relative flex flex-col" id="app-container">
             <ProBanner />
             <Toaster />

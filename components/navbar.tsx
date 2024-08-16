@@ -59,6 +59,7 @@ import { NotificationCard } from "./auth-state/notification-card";
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { title } from "./primitives";
+import { useDictionary } from "./dictionary-provider";
 
 export interface NavbarProps {
   routes: Route[];
@@ -79,7 +80,7 @@ export const Navbar: FC<NavbarProps> = ({
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean | undefined>(false);
   // const [commandKey, setCommandKey] = useState<"ctrl" | "command">("command");
-
+  const dictionary = useDictionary();
   const ref = useRef<HTMLElement>(null);
   // const isMounted = useIsMounted();
 
@@ -223,7 +224,7 @@ export const Navbar: FC<NavbarProps> = ({
             <p
               className={title({ size: "logo", color: "violet", italic: true })}
             >
-              PictaMagic
+              {dictionary.brandName}
             </p>
           </NextLink>
         </NavbarBrand>
@@ -249,20 +250,20 @@ export const Navbar: FC<NavbarProps> = ({
               data-active={pathname === "/upscaler"}
               onClick={() => handlePressNavbarItem("upscaler", "/upscaler")}
             >
-              Super Resolution
+              {dictionary.navbar.superResolution}
             </NextLink>
           </NavbarItem>
-          <NavbarItem>
+          {/* <NavbarItem>
             <NextLink
               className={nextLinkColor}
               color="foreground"
-              data-active={pathname === "/bg-remover"}
-              href="/bg-remover"
+              data-active={pathname === "/bgremover"}
+              href="/en/bgremover"
               onClick={() => handlePressNavbarItem("bg-remover", "/bg-remover")}
             >
-              Remove Backgrounds
+              {dictionary.navbar.removeBackgrounds}
             </NextLink>
-          </NavbarItem>
+          </NavbarItem> */}
           <NavbarItem>
             <NextLink
               className={nextLinkColor}
@@ -282,7 +283,7 @@ export const Navbar: FC<NavbarProps> = ({
               href="/denoiser"
               onClick={() => handlePressNavbarItem("denoiser", "/denoiser")}
             >
-              Denosie
+              {dictionary.navbar.denoise}
             </NextLink>
           </NavbarItem>
           <NavbarItem>
@@ -293,7 +294,7 @@ export const Navbar: FC<NavbarProps> = ({
               href="/deblurer"
               onClick={() => handlePressNavbarItem("deblurer", "/deblurer")}
             >
-              Deblur
+              {dictionary.navbar.deblur}
             </NextLink>
           </NavbarItem>
           {/* <NavbarItem>

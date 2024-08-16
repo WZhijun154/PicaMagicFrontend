@@ -25,8 +25,10 @@ export enum BasicImageTaskStatus {
 export interface BasicImageTaskInfo extends ImageFileInfoProps {
   taskMethod: any;
   processedUrl: string;
+  processedFileName?: string;
   watermarkedProcessedUrl?: string;
   status: BasicImageTaskStatus;
+  taskId?: string;
 }
 
 export const filesAtomForUpscaler = atom<BasicImageTaskInfo[]>([]);

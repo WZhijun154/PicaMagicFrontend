@@ -3,7 +3,7 @@ import BasicImageTaskApp from "@/components/image-tools/basic-image-task-app";
 import { filesAtomForDeblurer } from "@/utils/file";
 import { DeblurerIntro } from "@/components/marketing/intros/deblurer-intro";
 
-export default function Denoiser() {
+export default function Deblurer() {
   return (
     <BasicImageTaskApp
       filesAtom={filesAtomForDeblurer}

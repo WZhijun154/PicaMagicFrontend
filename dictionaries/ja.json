@@ -1,0 +1,43 @@
+{
+  "lang": "日本語",
+  "brandName": "PictaMagic",
+  "navbar": {
+    "superResolution": "超解像度",
+    "removeBackgrounds": "背景を削除",
+    "colorize": "カラー化",
+    "denoise": "ノイズ除去",
+    "deblur": "ぼかし除去"
+  },
+  "auth": {
+    "emailAddress": "メールアドレス",
+    "emailPlaceholder": "メールアドレスを入力してください",
+    "invalidEmailAddress": "無効なメールアドレスです。",
+    "signIn": "サインイン",
+    "signInSuccess": "サインインに成功しました。",
+    "signInAs": "としてサインイン",
+    "signOut": "サインアウト",
+    "signOutSuccess": "サインアウトに成功しました。",
+    "signOutConfirm": "サインアウトしてもよろしいですか？",
+    "signUp": "サインアップ",
+    "me": "自分",
+    "invalidLoginCredentials": "無効なメールアドレスまたはパスワードです。",
+    "resetPasswordGuide": "メールアドレスを入力していただければ、パスワードをリセットするためのリンクをお送りします。",
+    "password": "パスワード",
+    "passwordPlaceholder": "パスワードを入力してください",
+    "passwordNotLongEnough": "パスワードは8文字以上である必要があります。",
+    "rememberMe": "ログイン状態を保持する",
+    "forgotPasswordQuery": "パスワードを忘れましたか？",
+    "createAccountQuery": "アカウントを作成する必要がありますか？",
+    "username": "ユーザー名",
+    "usernamePlaceholder": "ユーザー名を入力してください",
+    "usernameNotLongEnough": "ユーザー名は3文字以上である必要があります。",
+    "confirmPassword": "パスワードの確認",
+    "confirmPasswordPlaceholder": "パスワードを確認してください",
+    "passwordsDoNotMatch": "パスワードが一致しません。"
+  },
+  "somethingWentWrong": "何かがうまくいきませんでした。もう一度お試しください。",
+  "failedToSendEmail": "メールの送信に失敗しました。もう一度お試しください。",
+  "emailSent": "メールが正常に送信されました。",
+  "send": "送信",
+  "cancel": "キャンセル"
+}

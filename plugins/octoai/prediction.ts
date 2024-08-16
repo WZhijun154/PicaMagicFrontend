@@ -106,3 +106,9 @@ export async function getWatermarkedAndProcessedImageBuffer(
 
   return { data: { buffer: processedImageBuffer }, error: null };
 }
+
+export async function getProcessedImageUrl(taskId: string): Promise<any> {
+  const { data, error } = await queryTask(taskId);
+  const processedImageUrl = data.images[0].image_url;
+  return { data: { url: processedImageUrl }, error: null };
+}

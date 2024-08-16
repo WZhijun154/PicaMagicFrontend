@@ -29,13 +29,14 @@ import XHRUpload from "@uppy/xhr-upload";
 import { TaskPool } from "@/utils/task-pool";
 import { upscaleRealEsrgan } from "@/plugins/replicate/prediction";
 import {
+  getProcessedImageUrl,
   getWatermarkedAndProcessedImageBuffer,
   upscaleImage,
 } from "@/plugins/octoai/prediction";
 import { getUrlFromBase64 } from "@/utils/image";
 
 import { useAddFile, useRemoveFile, useSetAttributes } from "@/utils/file";
-import { add } from "lodash";
+import { saveAs } from "file-saver";
 
 let uploadTaskPool = new TaskPool(2);
 let processTaskPool = new TaskPool(2);
@@ -152,6 +153,7 @@ export default function BasicImageTaskApp({
     }
 
     const taskId = submitData.task_id;
+    setAttributes(file, { taskId: taskId });
 
     const {
       data: watermarkedAndProcessedImageData,
@@ -170,33 +172,105 @@ export default function BasicImageTaskApp({
 
     const base64Url = getUrlFromBase64(base64Image);
 
-    setAttributes(file, { processedUrl: base64Url });
-    setAttributes(file, { status: BasicImageTaskStatus.SUCCEEDED });
+    setAttributes(file, {
+      processedUrl: base64Url,
+      processedFileName: `${file.fileName}-processed.png`,
+      status: BasicImageTaskStatus.SUCCEEDED,
+    });
   }
 
   const onDrop = async (_files: File[]) => {
     for (const _file of _files) {
-      const presignedUrl = await getPresignedUploadUrl(_file.name!, _file.type);
+      if (process.env.NEXT_PUBLIC_NEED_TO_UPLOAD === "1") {
+        const presignedUrl = await getPresignedUploadUrl(
+          _file.name!,
+          _file.type
+        );
+        // const presignedUrl = "";
 
-      const uppy = new Uppy({
-        autoProceed: false,
-      }).use(XHRUpload, {
-        method: "PUT",
-        formData: false, // Use formData if you need a multipart upload (typically false for S3-like uploads)
-        fieldName: "file", // Not needed when formData is false
-        endpoint: presignedUrl,
-      });
+        const uppy = new Uppy({
+          autoProceed: false,
+        }).use(XHRUpload, {
+          method: "PUT",
+          formData: false, // Use formData if you need a multipart upload (typically false for S3-like uploads)
+          fieldName: "file", // Not needed when formData is false
+          endpoint: presignedUrl,
+        });
 
-      uppy.on("file-added", (file: any) => {
-        const fileName = file.name;
+        uppy.on("file-added", (file: any) => {
+          const fileName = file.name;
+          const fileUrl = "";
+          const progress = 0;
+          const deleteMethod = () => {
+            uppy.removeFile(file.id);
+            removeFile(_file);
+          };
+          const processedUrl = "";
+          const status = BasicImageTaskStatus.NOT_READY;
+
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const fileUrlOnClient = reader.result as string;
+            const image = new window.Image();
+            image.src = fileUrlOnClient;
+            image.onload = () => {
+              const width = image.width;
+              const height = image.height;
+              const newFile: BasicImageTaskInfo = {
+                fileName,
+                fileUrl,
+                progress,
+                deleteMethod,
+                processedUrl,
+                status,
+                width,
+                height,
+                fileUrlOnClient,
+                taskMethod: null,
+              };
+              addFile(newFile);
+            };
+          };
+          reader.readAsDataURL(_file);
+        });
+
+        uppy.on("progress", (progress: any) => {
+          setAttributes(_file, { progress: progress });
+        });
+
+        uppy.on("complete", async (result: any) => {
+          // const signedDownloadUrl = await getSignedDownloadUrl(_file!.name);
+
+          setAttributes(_file, {
+            // fileUrl: signedDownloadUrl,
+            status: BasicImageTaskStatus.READY,
+          });
+        });
+
+        // uppy.on("upload-error", (file, error) => {
+        //   toast.error("Failed to upload file");
+        //   setAttributes(_file, { status: BasicImageTaskStatus.FAILED });
+        // });
+
+        uppy.addFile({
+          name: _file.name,
+          type: _file.type,
+          data: _file,
+        });
+
+        // do not need to upload
+        uploadTaskPool.addTask(async () => {
+          await uppy.upload();
+        });
+      } else {
+        const fileName = _file.name;
         const fileUrl = "";
         const progress = 0;
         const deleteMethod = () => {
-          uppy.removeFile(file.id);
           removeFile(_file);
         };
         const processedUrl = "";
-        const status = BasicImageTaskStatus.NOT_READY;
+        const status = BasicImageTaskStatus.READY;
 
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -222,35 +296,7 @@ export default function BasicImageTaskApp({
           };
         };
         reader.readAsDataURL(_file);
-      });
-
-      uppy.on("progress", (progress: any) => {
-        setAttributes(_file, { progress: progress });
-      });
-
-      uppy.on("complete", async (result: any) => {
-        const signedDownloadUrl = await getSignedDownloadUrl(_file!.name);
-
-        setAttributes(_file, {
-          fileUrl: signedDownloadUrl,
-          status: BasicImageTaskStatus.READY,
-        });
-      });
-
-      uppy.on("upload-error", (file, error) => {
-        toast.error("Failed to upload file");
-        setAttributes(_file, { status: BasicImageTaskStatus.FAILED });
-      });
-
-      uppy.addFile({
-        name: _file.name,
-        type: _file.type,
-        data: _file,
-      });
-
-      uploadTaskPool.addTask(async () => {
-        await uppy.upload();
-      });
+      }
     }
   };
 
@@ -267,10 +313,17 @@ export default function BasicImageTaskApp({
     });
   }, [files]);
 
-  const download = (file: BasicImageTaskInfo) => {
-    window.location.href =
-      backendBaseUrl + "/download?path=" + file.processedUrl;
-    return;
+  const download = async (file: BasicImageTaskInfo) => {
+    const { data, error } = await getProcessedImageUrl(file.taskId as string);
+    if (error) {
+      toast.error("Failed to download file");
+    }
+
+    const downloadUrl = data.url;
+    const response = await fetch(downloadUrl);
+
+    const _blob = await response.blob();
+    saveAs(_blob, file.fileName);
   };
 
   const openImageCompareModal = (file: BasicImageTaskInfo) => {

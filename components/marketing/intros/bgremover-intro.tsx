@@ -1,14 +1,17 @@
+"use server";
+
 import { Intro } from "./intro";
 import { title } from "@/components/primitives";
+import { Dictionary } from "@/components/dictionary-provider";
 
 interface BgRemoverIntroProps {
   size: "sm" | "lg";
   isExampleFront?: boolean;
 }
-
-const titleNode = (
+// Keep one page only one h1 tag for SEO
+const titleNode = (dictionary: Dictionary) => (
   <>
-    <h1 className={title({ size: "lg" })}>Effortlessly </h1>
+    <p className={title({ size: "lg" })}>Effortlessly </p>
     <div>
       <h1 className={title({ color: "green", size: "lg" })}>
         Remove Backgrounds&nbsp;
@@ -20,15 +23,18 @@ const titleNode = (
 export const BgRemoverIntro = ({
   size,
   isExampleFront,
-}: BgRemoverIntroProps) => (
-  <Intro
-    size={size}
-    introTitle={titleNode}
-    leftImage="landing/pexels-sunsetoned-9888301.jpg"
-    rightImage="landing/no_bg_pexels-sunsetoned-9888301.jpg"
-    navi="/bg-remover"
-    color="success"
-    subTitleText="Our AI-powered tool allows you to seamlessly remove backgrounds from your images with just a few clicks, enhancing your photo editing experience."
-    isExampleFront={isExampleFront}
-  />
-);
+  dictionary,
+}: BgRemoverIntroProps & { dictionary: Dictionary }) => {
+  return (
+    <Intro
+      size={size}
+      introTitle={titleNode(dictionary)}
+      leftImage="landing/pexels-sunsetoned-9888301.jpg"
+      rightImage="landing/no_bg_pexels-sunsetoned-9888301.jpg"
+      navi="/ai-remove-image-background" // pathname has a SEO impact, so it need to be easily readable
+      color="success"
+      subTitleText={dictionary.imageTools.bgRemover.subTitle}
+      isExampleFront={isExampleFront}
+    />
+  );
+};

@@ -2,8 +2,16 @@
 import React from "react";
 import { title, subtitle } from "@/components/primitives";
 import { Spacer } from "@nextui-org/spacer";
+import { getDictionary } from "@/get-dictionary";
+import { Locale } from "@/i18n-config";
 
-const EmailConfirmationPage = async () => {
+const EmailConfirmationPage = async ({
+  params,
+}: {
+  params: { lang: Locale };
+}) => {
+  const dictionary = await getDictionary(params.lang);
+
   return (
     <>
       {/* <Background /> */}
@@ -12,11 +20,10 @@ const EmailConfirmationPage = async () => {
         {/* <h1 className="text-2xl font-semibold mb-4">Almost there!</h1> */}
         <Spacer y={8} />
         <p className={subtitle({ fullWidth: true, size: "md" })}>
-          We've sent a confirmation link to your email address.
+          {dictionary.auth.weSentConfirmationEmail}
         </p>
         <p className={subtitle({ fullWidth: true, size: "md" })}>
-          Please check your inbox and click the link to complete your sign-up
-          process.
+          {dictionary.auth.pleaseCheckEmailToSignUp}
         </p>
 
         {/* <p className={subtitle({ fullWidth: true })}>
@@ -26,7 +33,7 @@ const EmailConfirmationPage = async () => {
           </Link>
         </p> */}
         <p className={subtitle({ fullWidth: true, size: "md" })}>
-          Thank you for joining PictaMagic!
+          {dictionary.auth.thankYouForSigningUp}
         </p>
       </div>
     </>
