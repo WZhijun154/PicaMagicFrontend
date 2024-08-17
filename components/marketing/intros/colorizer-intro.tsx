@@ -23,8 +23,8 @@ export const ColorizerIntro = ({
   <Intro
     size={size}
     introTitle={titleNode}
-    leftImage="landing/black-and-white-675004_1280.jpg"
-    rightImage="landing/colorized_black-and-white-675004_1280.jpg"
+    leftImage="/landing/black-and-white-675004_1280.jpg"
+    rightImage="/landing/colorized_black-and-white-675004_1280.jpg"
     navi="/colorizer"
     color="warning"
     subTitleText="Transform your black-and-white photos into vibrant, full-color images with ease using our advanced AI colorization tool."

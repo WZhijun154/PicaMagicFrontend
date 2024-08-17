@@ -1,5 +1,3 @@
-"use server";
-
 import { Intro } from "./intro";
 import { title } from "@/components/primitives";
 import { Dictionary } from "@/components/dictionary-provider";
@@ -29,8 +27,8 @@ export const BgRemoverIntro = ({
     <Intro
       size={size}
       introTitle={titleNode(dictionary)}
-      leftImage="landing/pexels-sunsetoned-9888301.jpg"
-      rightImage="landing/no_bg_pexels-sunsetoned-9888301.jpg"
+      leftImage="/landing/pexels-sunsetoned-9888301.jpg"
+      rightImage="/landing/no_bg_pexels-sunsetoned-9888301.jpg"
       navi="/ai-remove-image-background" // pathname has a SEO impact, so it need to be easily readable
       color="success"
       subTitleText={dictionary.imageTools.bgRemover.subTitle}

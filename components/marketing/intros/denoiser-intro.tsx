@@ -19,8 +19,8 @@ export const DenoiserIntro = ({ size, isExampleFront }: DenoiserIntroProps) => (
   <Intro
     size={size}
     introTitle={titleNode}
-    leftImage="landing/noisy_pexels-markb-105805.jpg"
-    rightImage="landing/resized_image.jpg"
+    leftImage="/landing/noisy_pexels-markb-105805.jpg"
+    rightImage="/landing/resized_image.jpg"
     navi="/denoiser"
     color="pink"
     subTitleText="Improve your images by eliminating unwanted noise and grain, ensuring crisp and clean results with our advanced AI denoising tool."

@@ -323,7 +323,7 @@ export default function BasicImageTaskApp({
     const response = await fetch(downloadUrl);
 
     const _blob = await response.blob();
-    saveAs(_blob, file.fileName);
+    saveAs(_blob, file.processedFileName);
   };
 
   const openImageCompareModal = (file: BasicImageTaskInfo) => {

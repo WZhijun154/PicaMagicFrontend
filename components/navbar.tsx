@@ -253,17 +253,17 @@ export const Navbar: FC<NavbarProps> = ({
               {dictionary.navbar.superResolution}
             </NextLink>
           </NavbarItem>
-          {/* <NavbarItem>
+          <NavbarItem>
             <NextLink
               className={nextLinkColor}
               color="foreground"
               data-active={pathname === "/bgremover"}
-              href="/en/bgremover"
+              href="/bgremover"
               onClick={() => handlePressNavbarItem("bg-remover", "/bg-remover")}
             >
               {dictionary.navbar.removeBackgrounds}
             </NextLink>
-          </NavbarItem> */}
+          </NavbarItem>
           <NavbarItem>
             <NextLink
               className={nextLinkColor}

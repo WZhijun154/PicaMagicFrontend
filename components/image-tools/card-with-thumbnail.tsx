@@ -8,6 +8,8 @@ import {
   CardProps,
 } from "@nextui-org/react";
 
+import { useTransition } from "react";
+
 export interface CardWithThumbnailProps {
   props?: CardProps;
   imgSrc: string;
@@ -16,7 +18,7 @@ export interface CardWithThumbnailProps {
   isFailed?: boolean;
   isUploading?: boolean;
   secondaryAction?: () => void;
-  primaryAction?: () => void;
+  primaryAction?: () => any;
   progress?: number;
   caption?: string;
   description?: string;
@@ -50,10 +52,25 @@ export function CardWithThumbnail({
     progressBar = <Progress size="sm" value={100} />;
   }
 
+  const [isPending, startTransition] = useTransition();
+
+  let _primaryAction;
+
+  _primaryAction = () => {
+    startTransition(async () => {
+      await primaryAction!();
+    });
+  };
+
   let primaryButton;
   if (isSuccess) {
     primaryButton = (
-      <Button color="success" onClick={primaryAction} variant="flat">
+      <Button
+        color="success"
+        onClick={_primaryAction}
+        variant="flat"
+        isLoading={isPending}
+      >
         Download
       </Button>
     );
@@ -61,13 +78,13 @@ export function CardWithThumbnail({
     primaryButton = <Button isDisabled>{action_text}</Button>;
   } else if (isFailed) {
     primaryButton = (
-      <Button color="warning" onClick={primaryAction} variant="flat">
+      <Button color="warning" onClick={_primaryAction} variant="flat">
         Retry
       </Button>
     );
   } else {
     primaryButton = (
-      <Button color="primary" onClick={primaryAction} variant="flat">
+      <Button color="primary" onClick={_primaryAction} variant="flat">
         {action_text}
       </Button>
     );
