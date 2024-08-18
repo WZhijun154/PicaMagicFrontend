@@ -1,5 +1,6 @@
 import { Modal, ModalContent, ModalBody, ModalHeader } from "@nextui-org/modal";
 import ReactCompareImage from "react-compare-image";
+import { useDictionary } from "../dictionary-provider";
 
 export interface ImageCompareModalProps {
   isOpen: boolean;
@@ -14,6 +15,8 @@ export function ImageCompareModal({
   leftImage,
   rightImage,
 }: ImageCompareModalProps) {
+  const dictionary = useDictionary();
+
   return (
     <Modal
       size="xl"
@@ -25,9 +28,11 @@ export function ImageCompareModal({
         {(onClose) => (
           <ModalBody>
             <ModalHeader className="flex-col gap-2 px-0 justify-center items-start">
-              <p className="text-30px text-default-600 font-normal">Details</p>
+              <p className="text-30px text-default-600 font-normal">
+                {dictionary.imageCompareModal.details}
+              </p>
               <p className="text-16px text-default-400 font-normal">
-                Drag the slider to compare the original and upscaled images.
+                {dictionary.imageCompareModal.dragInstructions}
               </p>
             </ModalHeader>
             <div className="pb-4">

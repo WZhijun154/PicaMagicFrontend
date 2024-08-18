@@ -70,6 +70,10 @@
       "titlePrefix": "Enhance Photos with",
       "titleEmphasis": "Super Resolution",
       "subTitle": "Our Super Resolution tool uses advanced AI to increase the resolution of your photos, enhancing detail and sharpness without losing any information."
+    },
+    "controlPanel": {
+      "enableFaceRestoration": "Enable face restoration",
+      "downloadAllProcessed": "Download All Processed Images"
     }
   },
   "features": {
@@ -114,5 +118,9 @@
     "download": "Download",
     "retry": "Retry",
     "seeDetails": "See Details"
+  },
+  "imageCompareModal": {
+    "details": "Image Comparison Details",
+    "dragInstructions": "Drag the slider to compare the before and after images"
   }
 }

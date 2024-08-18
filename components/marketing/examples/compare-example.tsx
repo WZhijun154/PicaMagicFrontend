@@ -8,9 +8,17 @@ interface IntroExampleProps {
   width: number;
   leftImage: string;
   rightImage: string;
+  leftAlt?: string;
+  rightAlt?: string;
 }
 
-const IntroExample = ({ width, leftImage, rightImage }: IntroExampleProps) => {
+const IntroExample = ({
+  width,
+  leftImage,
+  rightImage,
+  leftAlt = "old image",
+  rightAlt = "new image",
+}: IntroExampleProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = () => setIsHovered(true);
@@ -30,6 +38,8 @@ const IntroExample = ({ width, leftImage, rightImage }: IntroExampleProps) => {
         rightImage={rightImage}
         leftImageLabel={isHovered ? "before" : ""}
         rightImageLabel={isHovered ? "after" : ""}
+        leftImageAlt={leftAlt}
+        rightImageAlt={rightAlt}
       />
     </Card>
   );

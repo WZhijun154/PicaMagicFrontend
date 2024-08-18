@@ -44,8 +44,12 @@ export default async function Home({ params }: { params: { lang: Locale } }) {
           alt="background image"
           className="-z-1 fixed w-[100%] h-[100%] -left-[0%] top-0"
         /> */}
-        <Hero />
-        <FeaturesGrid features={features.topFeatures} />
+        <div className="animate-[slideInFromLeft_1s_ease-out] w-full">
+          <Hero />
+        </div>
+        <div className="animate-[fadeIn_1s_ease-out,slideUp_1s_ease-out] w-full">
+          <FeaturesGrid features={features.topFeatures} />
+        </div>
         {/* <Sponsors /> */}
         <UpscalerIntro size="lg" />
         <BgRemoverIntro size="lg" isExampleFront dictionary={dictionary} />

@@ -22,7 +22,7 @@
     "signUp": "サインアップ",
     "me": "私",
     "invalidLoginCredentials": "メールアドレスまたはパスワードが無効です。",
-    "resetPasswordGuide": "メールアドレスを入力してください。パスワードをリセットするリンクを送信します。",
+    "resetPasswordGuide": "メールアドレスを入力してください。パスワードをリセットするリン��を送信します。",
     "password": "パスワード",
     "passwordPlaceholder": "パスワードを入力してください",
     "passwordNotLongEnough": "パスワードは8文字以上である必要があります。",
@@ -41,7 +41,7 @@
     "confirmNewPassword": "新しいパスワードを確認",
     "confirmNewPasswordPlaceholder": "新しいパスワードを確認してください",
     "passwordsDoNotMatch": "パスワードが一致しません。",
-    "pleaseCheckEmailToSignUp": "受信トレイを確認し、サインアッププロセスを完了するためのリンクをクリックしてください。",
+    "pleaseCheckEmailToSignUp": "信トレイを確認し、サインアッププロセスを完了するためのリンクをクリックしてください。",
     "weSentConfirmationEmail": "確認リンクをメールアドレスに送信しました。",
     "thankYouForSigningUp": "サインアップありがとうございます！",
     "almostDown": "もうすぐ完了！",
@@ -70,6 +70,10 @@
       "titlePrefix": "写真を強化",
       "titleEmphasis": "超解像",
       "subTitle": "当社の超解像ツールは、高度なAIを使用して写真の解像度を高め、情報を失うことなくディテールと鮮明さを向上させます。"
+    },
+    "controlPanel": {
+      "enableFaceRestoration": "顔の復元を有効にする",
+      "downloadAllProcessed": "処理済みの画像をすべてダウンロード"
     }
   },
   "features": {
@@ -114,5 +118,9 @@
     "download": "ダウンロード",
     "retry": "再試行",
     "seeDetails": "詳細を表示"
+  },
+  "imageCompareModal": {
+    "details": "画像比較の詳細",
+    "dragInstructions": "スライダーをドラッグして、処理前と処理後の画像を比較してください"
   }
 }

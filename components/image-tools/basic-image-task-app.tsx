@@ -39,6 +39,7 @@ import { useAddFile, useRemoveFile, useSetAttributes } from "@/utils/file";
 import { saveAs } from "file-saver";
 import { useDictionary } from "../dictionary-provider";
 import { Slider } from "@nextui-org/react";
+import { useLang } from "../dictionary-provider";
 
 let uploadTaskPool = new TaskPool(2);
 let processTaskPool = new TaskPool(2);
@@ -65,7 +66,6 @@ function Stepper() {
           },
         ]}
       />
-      {/* <Card className="w-[384px] h-[256px] flex flex-col items-center bg-content2/50 text-content-foreground2"></Card> */}
     </div>
   );
 }
@@ -74,52 +74,90 @@ interface ControlPanelProps {
   color?: "primary" | "warning" | "success" | "secondary" | "danger";
 }
 
-function ControlPanel({ color = "primary" }: ControlPanelProps) {
+function ScaleSlider({ color }: ControlPanelProps) {
   const [scaleSliderValue, setScaleSliderValue] = useState(2.0);
+  const lang = useLang();
+  const dictionary = useDictionary();
 
   return (
-    <div className="w-[1280px] h-[48px] bg-content2/0 flex flex-row items-center gap-4">
-      <Button
-        color={color as any}
-        variant="flat"
-        radius="full"
-        className="justify-between"
-      >
-        {/* <Radio value="x2"> Resolution x2 </Radio>
-          <Radio value="x4"> Resolution x4 </Radio> */}
-        <Slider
-          size="sm"
-          step={0.1}
-          maxValue={4}
-          minValue={2}
-          aria-label="scale"
-          defaultValue={0.2}
-          className="w-[12rem]"
-          showTooltip={true}
-          onChange={(value) => setScaleSliderValue(value as number)}
-        />
+    <Button
+      color={color as any}
+      variant="flat"
+      radius="full"
+      className="justify-between"
+    >
+      <Slider
+        size="sm"
+        step={0.1}
+        maxValue={4}
+        minValue={2}
+        aria-label="scale"
+        defaultValue={2}
+        className="w-[12rem]"
+        showTooltip={true}
+        color="primary"
+        onChange={(value) => setScaleSliderValue(value as number)}
+        classNames={{
+          track: "bg-primary/30",
+        }}
+      />
+      {lang === "en" ? (
         <p className="min-w-[8rem] justify-start flex flex-row">
           Resolution x{scaleSliderValue}
         </p>
-      </Button>
+      ) : (
+        <p className="min-w-[6rem] justify-start flex flex-row">
+          解像度{scaleSliderValue}倍
+        </p>
+      )}
+    </Button>
+  );
+}
+
+function ModelSelector({ color }: ControlPanelProps) {
+  return (
+    <Button color={color as any} variant="flat" radius="full">
+      <RadioGroup
+        label=""
+        color={color as any}
+        defaultValue="model-a"
+        orientation="horizontal"
+        className="px-2 py-2"
+      >
+        {["Model-A", "Model-B", "Model-C"].map((model) => (
+          <Radio
+            key={model}
+            value={model.toLowerCase()}
+            classNames={{
+              wrapper: "border-2 border-primary/40",
+            }}
+          >
+            {model}
+          </Radio>
+        ))}
+      </RadioGroup>
+    </Button>
+  );
+}
+
+function ControlPanel({ color = "primary" }: ControlPanelProps) {
+  const dictionary = useDictionary();
+  return (
+    <div className="w-[1280px] h-[48px] bg-content2/0 flex flex-row items-center gap-4">
+      <ScaleSlider color={color} />
+      <ModelSelector color={color} />
       <Button color={color as any} variant="flat" radius="full">
-        <RadioGroup
-          label=""
+        <Checkbox
           color={color as any}
-          defaultValue="model-a"
-          orientation="horizontal"
-          className="px-2 py-2"
+          classNames={{
+            wrapper: "border-2 border-primary/40",
+          }}
         >
-          <Radio value="model-a"> Model-A </Radio>
-          <Radio value="modal-b"> Model-B </Radio>
-          <Radio value="modal-c"> Model-C </Radio>
-        </RadioGroup>
-      </Button>
-      <Button color={color as any} variant="flat" radius="full">
-        <Checkbox color={color as any}>Enable face restoration</Checkbox>
+          {dictionary.imageTools.controlPanel.enableFaceRestoration}
+        </Checkbox>
       </Button>
       <Button color={color as any} radius="full" isDisabled>
-        Download All Processed Image
+        {dictionary.imageTools.controlPanel.downloadAllProcessed}
       </Button>
     </div>
   );

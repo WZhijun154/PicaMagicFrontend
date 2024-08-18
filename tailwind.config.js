@@ -352,6 +352,22 @@ module.exports = {
             backgroundPosition: "-200% center",
           },
         },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        slideDown: {
+          "0%": { transform: "translateY(-10px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        slideInFromLeft: {
+          "0%": { transform: "translateX(-20%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
+        slideUp: {
+          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
       },
       animation: {
         heartbeat: "heartbeat 1s ease-in-out infinite",
@@ -360,6 +376,10 @@ module.exports = {
         "expand-opacity": "expand-opacity 6s linear infinite both",
         "text-gradient":
           "text-gradient 4s linear 0s infinite normal forwards running",
+        fadeIn: "fadeIn 1s ease-out forwards",
+        slideDown: "slideDown 0.5s ease-out",
+        slideInFromLeft: "slideInFromLeft 1s ease-out",
+        slideUp: "slideUp 1s ease-out",
       },
     },
   },
