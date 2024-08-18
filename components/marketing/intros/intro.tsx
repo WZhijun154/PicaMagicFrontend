@@ -6,14 +6,12 @@ import NextLink from "next/link";
 import IntroExample from "../examples/compare-example";
 
 import { ArrowRightIcon } from "@nextui-org/shared-icons";
-
+import { useDictionary } from "@/components/dictionary-provider";
 import {
   subtitle,
   titleWrapper,
   sectionWrapper,
 } from "@/components/primitives";
-
-import { useIsMobile } from "@/hooks/use-media-query";
 
 interface IntroTitleProps {
   size?: "sm" | "lg";
@@ -37,6 +35,8 @@ const IntroTitle = ({
     : "";
 
   buttonClassName += " max-w-fit";
+
+  const dictionary = useDictionary();
 
   return (
     <div className="flex flex-col gap-8 w-[768px]">
@@ -67,7 +67,7 @@ const IntroTitle = ({
             />
           }
         >
-          Get started
+          {dictionary.getStarted}
         </Button>
       )}
     </div>

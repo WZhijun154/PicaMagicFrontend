@@ -1,43 +1,118 @@
 {
   "lang": "日本語",
   "brandName": "PictaMagic",
+  "getStarted": "はじめに",
   "navbar": {
-    "superResolution": "超解像度",
+    "superResolution": "超解像",
     "removeBackgrounds": "背景を削除",
     "colorize": "カラー化",
     "denoise": "ノイズ除去",
-    "deblur": "ぼかし除去"
+    "deblur": "ぼかしを除去"
   },
   "auth": {
     "emailAddress": "メールアドレス",
     "emailPlaceholder": "メールアドレスを入力してください",
     "invalidEmailAddress": "無効なメールアドレスです。",
-    "signIn": "サインイン",
-    "signInSuccess": "サインインに成功しました。",
-    "signInAs": "としてサインイン",
-    "signOut": "サインアウト",
-    "signOutSuccess": "サインアウトに成功しました。",
-    "signOutConfirm": "サインアウトしてもよろしいですか？",
+    "signIn": "ログイン",
+    "signInSuccess": "正常にログインしました。",
+    "signInAs": "次でログイン",
+    "signOut": "ログアウト",
+    "signOutSuccess": "正常にログアウトしました。",
+    "signOutConfirm": "本当にログアウトしますか？",
     "signUp": "サインアップ",
-    "me": "自分",
-    "invalidLoginCredentials": "無効なメールアドレスまたはパスワードです。",
-    "resetPasswordGuide": "メールアドレスを入力していただければ、パスワードをリセットするためのリンクをお送りします。",
+    "me": "私",
+    "invalidLoginCredentials": "メールアドレスまたはパスワードが無効です。",
+    "resetPasswordGuide": "メールアドレスを入力してください。パスワードをリセットするリンクを送信します。",
     "password": "パスワード",
     "passwordPlaceholder": "パスワードを入力してください",
     "passwordNotLongEnough": "パスワードは8文字以上である必要があります。",
-    "rememberMe": "ログイン状態を保持する",
-    "forgotPasswordQuery": "パスワードを忘れましたか？",
-    "createAccountQuery": "アカウントを作成する必要がありますか？",
+    "passwordResetSuccess": "パスワードが正常にリセットされました。",
+    "resetPassword": "パスワードをリセット",
+    "newPassword": "新しいパスワード",
+    "newPasswordPlaceholder": "新しいパスワードを入力してください",
+    "rememberMe": "ログインを記憶",
+    "forgotPasswordQuery": "パスワードをお忘れですか？",
+    "createAccountQuery": "アカウントを作成しますか？",
     "username": "ユーザー名",
     "usernamePlaceholder": "ユーザー名を入力してください",
     "usernameNotLongEnough": "ユーザー名は3文字以上である必要があります。",
-    "confirmPassword": "パスワードの確認",
+    "confirmPassword": "パスワードを確認",
     "confirmPasswordPlaceholder": "パスワードを確認してください",
-    "passwordsDoNotMatch": "パスワードが一致しません。"
+    "confirmNewPassword": "新しいパスワードを確認",
+    "confirmNewPasswordPlaceholder": "新しいパスワードを確認してください",
+    "passwordsDoNotMatch": "パスワードが一致しません。",
+    "pleaseCheckEmailToSignUp": "受信トレイを確認し、サインアッププロセスを完了するためのリンクをクリックしてください。",
+    "weSentConfirmationEmail": "確認リンクをメールアドレスに送信しました。",
+    "thankYouForSigningUp": "サインアップありがとうございます！",
+    "almostDown": "もうすぐ完了！",
+    "alreadyHaveAnAccount": "すでにアカウントをお持ちですか？"
   },
-  "somethingWentWrong": "何かがうまくいきませんでした。もう一度お試しください。",
+  "somethingWentWrong": "問題が発生しました。もう一度お試しください。",
   "failedToSendEmail": "メールの送信に失敗しました。もう一度お試しください。",
   "emailSent": "メールが正常に送信されました。",
   "send": "送信",
-  "cancel": "キャンセル"
+  "cancel": "キャンセル",
+  "reset": "リセット",
+  "imageTools": {
+    "superResolution": "超解像",
+    "removeBackgrounds": "背景を削除",
+    "colorize": "カラー化",
+    "denoise": "ノイズ除去",
+    "deblur": "ぼかしを除去",
+    "upscale": "アップスケール",
+    "remove": "削除",
+    "bgRemover": {
+      "titlePrefix": "簡単に",
+      "titleEmphasis": "背景を削除",
+      "subTitle": "当社のAI搭載ツールを使用すると、数回のクリックで画像から背景をシームレスに削除でき、写真編集の体験を向上させます。"
+    },
+    "upscaler": {
+      "titlePrefix": "写真を強化",
+      "titleEmphasis": "超解像",
+      "subTitle": "当社の超解像ツールは、高度なAIを使用して写真の解像度を高め、情報を失うことなくディテールと鮮明さを向上させます。"
+    }
+  },
+  "features": {
+    "topFeatures": {
+      "fast": {
+        "title": "高速",
+        "description": "最新のAI推論エンジンを利用し、迅速な処理と即時の結果を確保します。"
+      },
+      "privacy": {
+        "title": "プライバシー保護",
+        "description": "あなたのデータはあなたのです。私たちはデータを他の目的に使用しないことを保証します。"
+      },
+      "simple": {
+        "title": "簡単操作",
+        "description": "インストール不要、画像をドラッグ＆ドロップするだけで簡単に始められます。"
+      },
+      "highQuality": {
+        "title": "高品質",
+        "description": "高度なAIを利用して、トップクラスの写真強化と編集品質を確保します。"
+      }
+    }
+  },
+  "stepper": {
+    "upload": {
+      "title": "アップロード",
+      "description": "画像をアップロード"
+    },
+    "download": {
+      "title": "ダウンロード",
+      "description": "処理が完了したら画像をダウンロード"
+    },
+    "done": {
+      "title": "完了",
+      "description": "これで完了です！"
+    }
+  },
+  "addOrDrop": "画像を追加またはドロップしてください",
+  "supportImage": "JPG、JPEG、PNG、または WEBP フォーマットを最大 30MB および 2048x2048 をサポート",
+  "imageCard": {
+    "processing": "処理中",
+    "uploading": "アップロード中",
+    "download": "ダウンロード",
+    "retry": "再試行",
+    "seeDetails": "詳細を表示"
+  }
 }

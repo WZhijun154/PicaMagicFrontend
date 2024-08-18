@@ -16,7 +16,9 @@ const EmailConfirmationPage = async ({
     <>
       {/* <Background /> */}
       <div className="mt-48 flex flex-col items-center justify-center text-center">
-        <p className={title({ size: "lg", color: "violet" })}>Almost there!</p>
+        <p className={title({ size: "lg", color: "violet" })}>
+          {dictionary.auth.almostDown}
+        </p>
         {/* <h1 className="text-2xl font-semibold mb-4">Almost there!</h1> */}
         <Spacer y={8} />
         <p className={subtitle({ fullWidth: true, size: "md" })}>

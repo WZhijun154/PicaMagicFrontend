@@ -9,7 +9,7 @@ import {
 } from "@nextui-org/react";
 
 import { useTransition } from "react";
-
+import { useDictionary } from "../dictionary-provider";
 export interface CardWithThumbnailProps {
   props?: CardProps;
   imgSrc: string;
@@ -39,6 +39,8 @@ export function CardWithThumbnail({
   primaryAction,
   secondaryAction,
 }: CardWithThumbnailProps) {
+  const dictionary = useDictionary();
+
   let progressBar;
   if (isSuccess) {
     progressBar = <Progress size="sm" value={100} color="success" />;
@@ -71,21 +73,23 @@ export function CardWithThumbnail({
         variant="flat"
         isLoading={isPending}
       >
-        Download
+        {dictionary.imageCard.download}
       </Button>
     );
   } else if (isRunning) {
-    primaryButton = <Button isDisabled>{action_text}</Button>;
+    primaryButton = (
+      <Button isDisabled>{dictionary.imageCard.processing}</Button>
+    );
   } else if (isFailed) {
     primaryButton = (
       <Button color="warning" onClick={_primaryAction} variant="flat">
-        Retry
+        {dictionary.imageCard.retry}
       </Button>
     );
   } else {
     primaryButton = (
       <Button color="primary" onClick={_primaryAction} variant="flat">
-        {action_text}
+        {dictionary.imageCard.processing}
       </Button>
     );
   }
@@ -94,25 +98,25 @@ export function CardWithThumbnail({
   if (isSuccess) {
     secondaryButton = (
       <Button color="default" variant="light" onClick={secondaryAction}>
-        See Details
+        {dictionary.imageCard.seeDetails}
       </Button>
     );
   } else if (isRunning) {
     secondaryButton = (
       <Button isDisabled variant="light" onClick={secondaryAction}>
-        Cancel
+        {dictionary.cancel}
       </Button>
     );
   } else if (isFailed) {
     secondaryButton = (
       <Button color="default" variant="light" onClick={secondaryAction}>
-        Cancel
+        {dictionary.cancel}
       </Button>
     );
   } else {
     secondaryButton = (
       <Button color="default" variant="light" onClick={secondaryAction}>
-        Cancel
+        {dictionary.cancel}
       </Button>
     );
   }

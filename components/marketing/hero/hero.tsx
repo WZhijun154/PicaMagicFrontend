@@ -11,12 +11,81 @@ import { GithubIcon } from "@/components/icons";
 import { title, subtitle } from "@/components/primitives";
 import { trackEvent } from "@/utils/va";
 
+import { useLang } from "@/components/dictionary-provider";
+
 const BgLooper = dynamic(
   () => import("./bg-looper").then((mod) => mod.BgLooper),
   {
     ssr: false,
   }
 );
+
+const Header = () => {
+  const lang = useLang();
+  if (lang === "en") {
+    return (
+      <>
+        <div className="text-center leading-8 md:leading-10 md:text-left transition-all">
+          <h1 className={title()}>
+            <span className="inline-block">Create&nbsp;</span>
+            <span className={title({ color: "violet" })}>Stunning&nbsp;</span>
+            <span>Photos Effortlessly with</span>
+            <p>AI-Powered Editing.</p>
+          </h1>
+        </div>
+        <h2
+          className={subtitle({
+            fullWidth: true,
+            class: "text-center md:text-left",
+          })}
+        >
+          Powerful, intuitive, and seamless AI photo editing tools.
+        </h2>
+      </>
+    );
+  } else if (lang === "ja") {
+    return (
+      <>
+        <div className="text-center leading-8 md:leading-10 md:text-left transition-all">
+          <h1 className={title()}>
+            <p className="py-2">AIによる編集で</p>
+            <p className={`${title({ color: "violet" })} py-2`}>美しき</p>
+            <p>写真を撮る。</p>
+          </h1>
+        </div>
+        <h2
+          className={subtitle({
+            fullWidth: true,
+            class: "text-center md:text-left",
+          })}
+        >
+          強力で直感的、そしてシームレスなAIによる写真編集ツール。
+        </h2>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <div className="text-center leading-8 md:leading-10 md:text-left transition-all">
+          <h1 className={title()}>
+            <span className="inline-block">Create&nbsp;</span>
+            <span className={title({ color: "violet" })}>Stunning&nbsp;</span>
+            <span>Photos Effortlessly with</span>
+            <p>AI-Powered Editing.</p>
+          </h1>
+        </div>
+        <h2
+          className={subtitle({
+            fullWidth: true,
+            class: "text-center md:text-left",
+          })}
+        >
+          Powerful, intuitive, and seamless AI photo editing tools.
+        </h2>
+      </>
+    );
+  }
+};
 
 export const Hero = () => {
   const handlePressAnnouncement = (name: string, url: string) => {
@@ -48,15 +117,13 @@ export const Hero = () => {
             </span>
           </Chip>
         </div> */}
-        <div className="text-center leading-8 md:leading-10 md:text-left transition-all">
-          <div className="inline-block">
-            <h1 className={title()}>Create&nbsp;</h1>
-            <h1 className={title({ color: "violet" })}>Stunning&nbsp;</h1>
-          </div>
-          <h1 className={title()}>Photos Effortlessly with</h1>
-          <div>
-            <h1 className={title()}>AI-Powered Editing.</h1>
-          </div>
+        {/* <div className="text-center leading-8 md:leading-10 md:text-left transition-all">
+          <h1 className={title()}>
+            <span className="inline-block">Create&nbsp;</span>
+            <span className={title({ color: "violet" })}>Stunning&nbsp;</span>
+            <span>Photos Effortlessly with</span>
+            <p>AI-Powered Editing.</p>
+          </h1>
         </div>
         <h2
           className={subtitle({
@@ -65,7 +132,8 @@ export const Hero = () => {
           })}
         >
           Powerful, intuitive, and seamless AI photo editing tools.
-        </h2>
+        </h2> */}
+        <Header />
         {/* <div className="flex flex-col md:flex-row items-center gap-4">
           <Button
             as={NextLink}

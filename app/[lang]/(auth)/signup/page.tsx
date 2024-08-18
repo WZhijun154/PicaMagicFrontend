@@ -109,7 +109,7 @@ export default function SignUpPage() {
 
   return (
     <>
-      <Background />
+      {/* <Background /> */}
       <div className="flex flex-row items-center justify-center mt-36">
         <Card className="animate-appearance-in flex w-full max-w-sm flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small">
           <p className="pb-2 text-xl font-medium">{dictionary.auth.signUp}</p>
@@ -240,7 +240,7 @@ export default function SignUpPage() {
         </Button>
       </div> */}
           <p className="text-center text-small">
-            Already have an account?&nbsp;
+            {dictionary.auth.alreadyHaveAnAccount} &nbsp;
             <Link href="/signin" size="sm" color={themeColor as any}>
               {dictionary.auth.signIn}
             </Link>

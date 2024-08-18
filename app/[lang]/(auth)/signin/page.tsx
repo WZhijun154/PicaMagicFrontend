@@ -112,10 +112,10 @@ export default function SignInPage() {
 
   return (
     <>
-      <Background />
+      {/* <Background /> */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
-          <ModalHeader>Forgot Password</ModalHeader>
+          <ModalHeader>{dictionary.auth.resetPassword}</ModalHeader>
           <ModalBody>
             <p className="text-default-500">
               {dictionary.auth.resetPasswordGuide}
@@ -154,7 +154,7 @@ export default function SignInPage() {
             <Input
               label={dictionary.auth.emailAddress}
               name="email"
-              placeholder={emailPlaceHolder}
+              placeholder={dictionary.auth.emailPlaceholder}
               type="email"
               variant="bordered"
               color={themeColor as any}

@@ -37,28 +37,31 @@ import { getUrlFromBase64 } from "@/utils/image";
 
 import { useAddFile, useRemoveFile, useSetAttributes } from "@/utils/file";
 import { saveAs } from "file-saver";
+import { useDictionary } from "../dictionary-provider";
+import { Slider } from "@nextui-org/react";
 
 let uploadTaskPool = new TaskPool(2);
 let processTaskPool = new TaskPool(2);
 
 function Stepper() {
   const stepperColor = useCurrentThemeColor({});
+  const dictionary = useDictionary();
   return (
     <div className="flex flex-col justify-center items-center">
       <VerticalSteps
         color={stepperColor as any}
         steps={[
           {
-            title: "Upload",
-            description: "Upload an image to get started",
+            title: dictionary.stepper.upload.title,
+            description: dictionary.stepper.upload.description,
           },
           {
-            title: "Process",
-            description: "Process the image to remove the background",
+            title: dictionary.stepper.download.title,
+            description: dictionary.stepper.download.description,
           },
           {
-            title: "Download",
-            description: "Download the processed image",
+            title: dictionary.stepper.done.title,
+            description: dictionary.stepper.done.description,
           },
         ]}
       />
@@ -72,19 +75,32 @@ interface ControlPanelProps {
 }
 
 function ControlPanel({ color = "primary" }: ControlPanelProps) {
+  const [scaleSliderValue, setScaleSliderValue] = useState(2.0);
+
   return (
     <div className="w-[1280px] h-[48px] bg-content2/0 flex flex-row items-center gap-4">
-      <Button color={color as any} variant="flat" radius="full">
-        <RadioGroup
-          label=""
-          color={color as any}
-          defaultValue="x2"
-          orientation="horizontal"
-          className="px-2 py-2"
-        >
-          <Radio value="x2"> Resolution x2 </Radio>
-          <Radio value="x4"> Resolution x4 </Radio>
-        </RadioGroup>
+      <Button
+        color={color as any}
+        variant="flat"
+        radius="full"
+        className="justify-between"
+      >
+        {/* <Radio value="x2"> Resolution x2 </Radio>
+          <Radio value="x4"> Resolution x4 </Radio> */}
+        <Slider
+          size="sm"
+          step={0.1}
+          maxValue={4}
+          minValue={2}
+          aria-label="scale"
+          defaultValue={0.2}
+          className="w-[12rem]"
+          showTooltip={true}
+          onChange={(value) => setScaleSliderValue(value as number)}
+        />
+        <p className="min-w-[8rem] justify-start flex flex-row">
+          Resolution x{scaleSliderValue}
+        </p>
       </Button>
       <Button color={color as any} variant="flat" radius="full">
         <RadioGroup
@@ -333,7 +349,7 @@ export default function BasicImageTaskApp({
 
   return (
     <>
-      <Background />
+      {/* <Background /> */}
       <ImageCompareModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
@@ -343,7 +359,7 @@ export default function BasicImageTaskApp({
 
       <div className="flex flex-col gap-12 items-center mt-[96px] mb-24">
         <div>{hero}</div>
-        <div className="flex-row flex gap-8">
+        <div className="flex-row flex gap-24 mt-8">
           <FileDropArea
             allowFileTypes={["image/jpeg", "image/png", "image/webp"]}
             dropAction={onDrop}
@@ -354,7 +370,7 @@ export default function BasicImageTaskApp({
         </div>
         <div className="flex flex-col justify-center items-center gap-2">
           <ControlPanel color={color} />
-          <div className="grid max-w-8xl grid-cols-1 gap-5 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid max-w-[84rem] grid-cols-1 gap-5 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {files.map((file) => (
               <CardWithThumbnail
                 imgSrc={file.fileUrlOnClient as string}

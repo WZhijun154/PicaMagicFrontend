@@ -1,6 +1,7 @@
 {
   "lang": "English",
   "brandName": "PictaMagic",
+  "getStarted": "Get Started",
   "navbar": {
     "superResolution": "Super Resolution",
     "removeBackgrounds": "Remove Backgrounds",
@@ -42,7 +43,9 @@
     "passwordsDoNotMatch": "Passwords do not match.",
     "pleaseCheckEmailToSignUp": "Please check your inbox and click the link to complete your sign-up process.",
     "weSentConfirmationEmail": "We have sent a confirmation link to your email address.",
-    "thankYouForSigningUp": "Thank you for signing up!"
+    "thankYouForSigningUp": "Thank you for signing up!",
+    "almostDown": "Almost Down!",
+    "alreadyHaveAnAccount": "Already have an account?"
   },
   "somethingWentWrong": "Something went wrong, please try again.",
   "failedToSendEmail": "Failed to send email, please try again.",
@@ -59,7 +62,57 @@
     "upscale": "Upscale",
     "remove": "Remove",
     "bgRemover": {
+      "titlePrefix": "Effortlessly ",
+      "titleEmphasis": "Remove Backgrounds",
       "subTitle": "Our AI-powered tool allows you to seamlessly remove backgrounds from your images with just a few clicks, enhancing your photo editing experience."
+    },
+    "upscaler": {
+      "titlePrefix": "Enhance Photos with",
+      "titleEmphasis": "Super Resolution",
+      "subTitle": "Our Super Resolution tool uses advanced AI to increase the resolution of your photos, enhancing detail and sharpness without losing any information."
     }
+  },
+  "features": {
+    "topFeatures": {
+      "fast": {
+        "title": "Fast",
+        "description": "Utilizes the latest AI inference engine to ensure rapid processing and quick results."
+      },
+      "privacy": {
+        "title": "Privacy",
+        "description": "Your data remains yours, we guarantee it will not be used for any other purposes."
+      },
+      "simple": {
+        "title": "Simple",
+        "description": "Easy to use, no need to install anything, just drag and drop your images to get started."
+      },
+      "highQuality": {
+        "title": "High Quality",
+        "description": "Utilizes advanced AI to ensure top-notch photo enhancement and editing quality."
+      }
+    }
+  },
+  "stepper": {
+    "upload": {
+      "title": "Upload",
+      "description": "Upload an image to get started"
+    },
+    "download": {
+      "title": "Download",
+      "description": "Download the processed image"
+    },
+    "done": {
+      "title": "Done",
+      "description": "That's ALL!"
+    }
+  },
+  "addOrDrop": "Add or drop your image here",
+  "supportImage": "Supports JPG, JPEG, PNG or WEBP up to 30MB and 2048x2048",
+  "imageCard": {
+    "processing": "Processing",
+    "uploading": "Uploading",
+    "download": "Download",
+    "retry": "Retry",
+    "seeDetails": "See Details"
   }
 }

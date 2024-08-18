@@ -7,19 +7,17 @@ import { BgRemoverIntro } from "@/components/marketing/intros/bgremover-intro";
 import { ColorizerIntro } from "@/components/marketing/intros/colorizer-intro";
 import { DenoiserIntro } from "@/components/marketing/intros/denoiser-intro";
 import { DeblurerIntro } from "@/components/marketing/intros/deblurer-intro";
-import { A11yOtb } from "@/components/marketing/a11y-otb";
-import { DarkMode } from "@/components/marketing/dark-mode";
-import { Customization } from "@/components/marketing/customization";
-import { LastButNotLeast } from "@/components/marketing/last-but-not-least";
 import { InstallBanner } from "@/components/marketing/install-banner";
 import { Community } from "@/components/marketing/community";
 import { Support } from "@/components/marketing/support";
-import landingContent from "@/content/landing";
 import { getAllSponsors } from "@/utils/get-all-sponsors";
 
 import { Sponsors } from "@/components/marketing/sponsors";
 import { getDictionary } from "@/get-dictionary";
+import { getFeatures } from "@/content/landing";
 import { Locale } from "@/i18n-config";
+import { Image } from "@nextui-org/image";
+// import { Video } from "@/background/webm-bg";
 // async function getData() {
 //   try {
 //     const sponsors = await getAllSponsors();
@@ -35,12 +33,19 @@ import { Locale } from "@/i18n-config";
 export default async function Home({ params }: { params: { lang: Locale } }) {
   // const data = await getData();
   const dictionary = await getDictionary(params.lang);
+  const features = await getFeatures(dictionary);
 
   return (
     <main className="container mx-auto max-w-7xl px-6 flex-grow">
       <section className="flex flex-col items-center justify-center">
+        {/* <Video /> */}
+        {/* <Image
+          src="/color4bg_2024-08-18_10_27_38.png"
+          alt="background image"
+          className="-z-1 fixed w-[100%] h-[100%] -left-[0%] top-0"
+        /> */}
         <Hero />
-        <FeaturesGrid features={landingContent.topFeatures} />
+        <FeaturesGrid features={features.topFeatures} />
         {/* <Sponsors /> */}
         <UpscalerIntro size="lg" />
         <BgRemoverIntro size="lg" isExampleFront dictionary={dictionary} />

@@ -119,6 +119,7 @@ export default async function RootLayout({
         <Providers
           themeProps={{ attribute: "class", defaultTheme: "light" }}
           dictionary={dictionary}
+          lang={params.lang}
         >
           <div className="relative flex flex-col" id="app-container">
             <ProBanner />

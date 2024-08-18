@@ -8,17 +8,20 @@ import { useRouter } from "next/navigation";
 import { Provider as JotaiProvider } from "jotai";
 import DictionaryProvider from "@/components/dictionary-provider";
 import { Dictionary } from "@/components/dictionary-provider";
-
+import { LangProvider } from "@/components/dictionary-provider";
+import { Locale } from "@/i18n-config";
 export interface ProvidersProps {
   children: React.ReactNode;
   themeProps?: ThemeProviderProps;
   dictionary: Dictionary;
+  lang: Locale;
 }
 
 export function Providers({
   children,
   themeProps,
   dictionary,
+  lang,
 }: ProvidersProps) {
   const router = useRouter();
 
@@ -26,7 +29,9 @@ export function Providers({
     <NextUIProvider navigate={router.push}>
       <NextThemesProvider {...themeProps}>
         <DictionaryProvider dictionary={dictionary}>
-          <JotaiProvider>{children}</JotaiProvider>
+          <LangProvider lang={lang}>
+            <JotaiProvider>{children}</JotaiProvider>
+          </LangProvider>
         </DictionaryProvider>
       </NextThemesProvider>
     </NextUIProvider>

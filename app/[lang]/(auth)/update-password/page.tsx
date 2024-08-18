@@ -88,7 +88,7 @@ export default function PasswordResetPage() {
 
   return (
     <>
-      <Background />
+      {/* <Background /> */}
       <div className="flex flex-row items-center justify-center mt-36">
         <Card className="animate-appearance-in flex w-full max-w-sm flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small">
           <p className="pb-2 text-xl font-medium">
